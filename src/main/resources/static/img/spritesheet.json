@@ -1,16 +1,8 @@
 {"frames": {
 
-"background.png":
-{
-	"frame": {"x":498,"y":481,"w":1280,"h":480},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":1280,"h":480},
-	"sourceSize": {"w":1280,"h":480}
-},
 "battery.png":
 {
-	"frame": {"x":92,"y":0,"w":35,"h":25},
+	"frame": {"x":216,"y":0,"w":35,"h":25},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":35,"h":25},
@@ -26,11 +18,19 @@
 },
 "blue_hilite_leading.png":
 {
-	"frame": {"x":248,"y":0,"w":42,"h":8},
+	"frame": {"x":0,"y":0,"w":42,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":8},
 	"sourceSize": {"w":42,"h":8}
+},
+"center_lines.png":
+{
+	"frame": {"x":277,"y":277,"w":570,"h":327},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":570,"h":327},
+	"sourceSize": {"w":570,"h":327}
 },
 "center_logo.png":
 {
@@ -42,7 +42,7 @@
 },
 "fuel.png":
 {
-	"frame": {"x":0,"y":0,"w":23,"h":29},
+	"frame": {"x":289,"y":0,"w":23,"h":29},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":23,"h":29},
@@ -50,7 +50,7 @@
 },
 "high_beam.png":
 {
-	"frame": {"x":334,"y":0,"w":51,"h":31},
+	"frame": {"x":313,"y":0,"w":51,"h":31},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":51,"h":31},
@@ -58,7 +58,7 @@
 },
 "lagging_max_boost.png":
 {
-	"frame": {"x":291,"y":0,"w":42,"h":8},
+	"frame": {"x":43,"y":0,"w":42,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":8},
@@ -66,7 +66,7 @@
 },
 "left_gauge_bg.png":
 {
-	"frame": {"x":1264,"y":0,"w":495,"h":480},
+	"frame": {"x":0,"y":605,"w":495,"h":480},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":495,"h":480},
@@ -82,7 +82,7 @@
 },
 "left_indicator.png":
 {
-	"frame": {"x":165,"y":0,"w":40,"h":47},
+	"frame": {"x":365,"y":0,"w":40,"h":47},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":47},
@@ -90,7 +90,7 @@
 },
 "little_needle.png":
 {
-	"frame": {"x":24,"y":0,"w":32,"h":14},
+	"frame": {"x":86,"y":0,"w":32,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":14},
@@ -98,7 +98,7 @@
 },
 "low_beam.png":
 {
-	"frame": {"x":57,"y":0,"w":34,"h":24},
+	"frame": {"x":119,"y":0,"w":34,"h":24},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":34,"h":24},
@@ -106,7 +106,7 @@
 },
 "mil.png":
 {
-	"frame": {"x":128,"y":0,"w":36,"h":25},
+	"frame": {"x":252,"y":0,"w":36,"h":25},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":25},
@@ -114,7 +114,7 @@
 },
 "oil.png":
 {
-	"frame": {"x":386,"y":0,"w":61,"h":24},
+	"frame": {"x":154,"y":0,"w":61,"h":24},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":24},
@@ -122,7 +122,7 @@
 },
 "right_gauge_bg.png":
 {
-	"frame": {"x":0,"y":481,"w":497,"h":480},
+	"frame": {"x":496,"y":605,"w":497,"h":480},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":497,"h":480},
@@ -130,7 +130,7 @@
 },
 "right_gauge_fg.png":
 {
-	"frame": {"x":987,"y":0,"w":276,"h":276},
+	"frame": {"x":0,"y":277,"w":276,"h":276},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":276},
@@ -138,7 +138,7 @@
 },
 "right_indicator.png":
 {
-	"frame": {"x":206,"y":0,"w":41,"h":47},
+	"frame": {"x":406,"y":0,"w":41,"h":47},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":41,"h":47},
@@ -149,8 +149,8 @@
 	"version": "1.0",
 	"image": "spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":1778,"h":961},
+	"size": {"w":993,"h":1085},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:f91edc3d38a8e0809f32a46121b02f37:f3d0e930c2839c1ecee6b8edb54d8a10:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:d0aa341045f9664b3b834b80a3b4f400:a12a6ffca1e4c6f5413fcebd770c49f6:729adc6043343cfda41c447ce8f464d6$"
 }
 }

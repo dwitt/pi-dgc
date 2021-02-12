@@ -91,8 +91,10 @@ function setup() {
         // Get reference to sprite sheet
         const sheet = PIXI.Loader.shared.resources['img/spritesheet.json'].spritesheet;
 
-        sprites.background = new PIXI.Sprite(sheet.textures['background.png']);
-        app.stage.addChild(sprites.background);
+        sprites.centerLines = new PIXI.Sprite(sheet.textures['center_lines.png']);
+        sprites.centerLines.anchor.set(0.5, 0.5);
+        sprites.centerLines.position.set(640, 240);
+        app.stage.addChild(sprites.centerLines);
 
         sprites.backupCamera = new PIXI.Sprite(PIXI.Texture.from(video));
         sprites.backupCamera.anchor.set(0.5, 0.5);
@@ -287,7 +289,7 @@ function setup() {
             fill: "white"
         });
         texts.clock.anchor.set(0.5, 0.5);
-        texts.clock.position.set(640, 43);
+        texts.clock.position.set(640, 55);
         texts.clock.alpha = 0.8;
         app.stage.addChild(texts.clock);
 
