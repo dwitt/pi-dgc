@@ -31,6 +31,9 @@ const graphics = {};
 // Backup camera
 const video = document.querySelector("#videoElement");
 
+// STOMP client
+let stompClient;
+
 // Clock value
 let clock = "0:00 AM";
 
@@ -72,11 +75,12 @@ function setup() {
             .then(function (stream) {
                 video.srcObject = stream;
             })
-            .catch(function (err0r) {
+            .catch(function (error) {
                 console.log("Something went wrong binding the camera!");
             });
     }
 
+    // Turn on all indicators for startup sequence
     indicators.left = true;
     indicators.right = true;
     indicators.lowBeam = true;
@@ -346,8 +350,6 @@ function initLoop() {
     if (initState >= 80) {
         app.ticker.remove(initLoop);
 
-        console.log("Starting main loop");
-
         indicators = setAllIndicators(indicators, false);
 
         // For some reason this is required or the indicators flash before being hidden
@@ -363,6 +365,9 @@ function initLoop() {
         }, 1);
 
         boostLaggingMax = 0;
+
+        // Create websocket
+        connectWebSocket();
 
         // Start initialization loop
         app.ticker.add(mainLoop);
@@ -470,6 +475,27 @@ function drawChangingElements() {
         clock = currentTime();
         texts.clock.text = clock;
     }
+}
+
+// Maintains connectin to web socket
+function connectWebSocket() {
+    const socket = new SockJS('/gs-guide-websocket');
+    stompClient = Stomp.over(socket);
+    // stompClient.debug = DEBUG_MODE;
+    stompClient.connect({}, (frame) => {
+        console.log('Connected: ' + frame);
+
+        stompClient.subscribe('/topic/status', (message) => {
+            const statusMsg = JSON.parse(message.body);
+
+            rpm = statusMsg.rpm;
+        });
+    }, () => {
+        // Attempt to reconnect on lost connection
+        window.setTimeout(function() {
+            this.connectWebSocket();
+        }.bind(this), 2500);
+    });
 }
 
 // START THE DISPLAY!
