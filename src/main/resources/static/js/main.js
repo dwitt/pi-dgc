@@ -60,7 +60,8 @@ function setup() {
     app = new PIXI.Application({
         width: 1280,
         height: 480,
-        antialias: true
+        antialias: true,
+        backgroundColor: 0x000000
     });
 
     // Stop animations while assets are loaded
@@ -476,6 +477,13 @@ function drawChangingElements() {
     if (currentTime() !== clock) {
         clock = currentTime();
         texts.clock.text = clock;
+    }
+
+    // Shift light
+    if (rpm >= 6500) {
+        app.renderer.backgroundColor = 0xFF0000;
+    } else {
+        app.renderer.backgroundColor = 0x000000;
     }
 }
 

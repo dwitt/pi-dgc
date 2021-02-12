@@ -54,7 +54,7 @@ function currentTime() {
     const date = new Date();
     let hours = date.getHours();
     const half = (hours >= 1 && hours <= 11) ? "AM" : "PM";
-    hours = (hours >= 1 && hours <= 11) ? hours : ((hours === 0) ? 12 : hours - 12);
+    hours = (hours >= 1 && hours <= 11) ? hours : ((hours === 0 || hours === 12) ? 12 : hours - 12);
     const minutes = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
 
     return hours + ":" + minutes + " " + half;
