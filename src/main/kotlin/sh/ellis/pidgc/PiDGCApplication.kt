@@ -2,11 +2,18 @@ package sh.ellis.pidgc
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.scheduling.annotation.EnableScheduling
+import sh.ellis.pidgc.can.CanManager
+import javax.annotation.PostConstruct
 
-@EnableScheduling
 @SpringBootApplication
-class PiDGCApplication
+class PiDGCApplication {
+
+    @PostConstruct
+    fun init() {
+       Thread(CanManager()).start()
+    }
+
+}
 
 fun main(args: Array<String>) {
     runApplication<PiDGCApplication>(*args)

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import sh.ellis.pidgc.model.Message
 import kotlin.random.Random
-import mu.KotlinLogging
 
 @Component
 class StatusDispatcher {
@@ -15,7 +14,7 @@ class StatusDispatcher {
     private val template: SimpMessagingTemplate? = null
 
     @Scheduled(fixedRate = 50)
-    fun dispatchStatus() {
+    fun dispatchStatus(msg: Message) {
         template?.convertAndSend("/topic/status",
             Message(
                 rpm = Random.nextInt(4000, 4100)
