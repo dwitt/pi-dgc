@@ -1,5 +1,5 @@
 // Constant definitions
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 const MAX_RPM = 8000;
 const MAX_MPH = 160;
 const MAX_BOOST = 30;
@@ -487,11 +487,13 @@ function drawChangingElements() {
     }
 }
 
-// Maintains connectin to web socket
+// Maintains connection to web socket
 function connectWebSocket() {
     const socket = new SockJS('/gs-guide-websocket');
+
     stompClient = Stomp.over(socket);
-    // stompClient.debug = DEBUG_MODE;
+    stompClient.debug = DEBUG_MODE;
+
     stompClient.connect({}, (frame) => {
         console.log('Connected: ' + frame);
 
@@ -499,6 +501,17 @@ function connectWebSocket() {
             const statusMsg = JSON.parse(message.body);
 
             rpm = statusMsg.rpm;
+            coolant = statusMsg.coolant;
+            boost = statusMsg.boost;
+            mph = statusMsg.mph;
+            indicators.mil = statusMsg.mil;
+            indicators.oil = statusMsg.oil;
+            indicators.lowBeam = statusMsg.lowBeam;
+            indicators.highBeam = statusMsg.highBeam;
+            indicators.left = statusMsg.left;
+            indicators.right = statusMsg.right;
+            indicators.battery = statusMsg.battery;
+            indicators.fuel = statusMsg.fuel;
         });
     }, () => {
         // Attempt to reconnect on lost connection
