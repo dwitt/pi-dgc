@@ -12,6 +12,7 @@ data class StatusMessage(
     val lowBeam: Boolean,       // Serial
     val highBeam: Boolean,      // Serial
     val left: Boolean,          // Serial
+    val reverse: Boolean,       // Serial
     val right: Boolean,         // Serial
     val voltage: Double,        // OBD2
     val odometer: Double,       // Serial + Config

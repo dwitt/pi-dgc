@@ -31,6 +31,7 @@ class Websocket {
                 highBeam = State.highBeam,
                 left = State.left,
                 right = State.right,
+                reverse = State.reverse,
                 voltage = State.battery,
                 odometer = State.odometer,
                 tripOdometer = State.tripOdometer

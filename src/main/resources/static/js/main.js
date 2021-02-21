@@ -16,6 +16,7 @@ let oil = 10;
 let odometer = 0.0;
 let tripOdometer = 0.0;
 let boostLaggingMax = 0;
+let reverse = false;
 
 // Indicators
 let indicators = {};
@@ -556,6 +557,7 @@ function connectWebSocket() {
             voltage = statusMsg.voltage;
             odometer = statusMsg.odometer;
             tripOdometer = statusMsg.tripOdometer;
+            reverse = statusMsg.reverse;
 
             indicators.mil = statusMsg.mil;
             indicators.oil = statusMsg.oil;
