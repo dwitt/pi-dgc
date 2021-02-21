@@ -1,16 +1,20 @@
 // Constant definitions
 const DEBUG_MODE = false;
-const MAX_RPM = 8000;
-const MAX_MPH = 160;
-const MAX_BOOST = 30;
+const MAX_RPM = 8000.0;
+const MAX_MPH = 160.0;
+const MAX_BOOST = 30.0;
 
 // Tracking variables
 let rpm = 0;
-let mph = 0;
+let mph = 0.0;
 let coolant = 170;
 let fuel = 0.0;
 let initState = 0;
 let boost = 0;
+let voltage = 0.0;
+let oil = 10;
+let odometer = 0.0;
+let tripOdometer = 0.0;
 let boostLaggingMax = 0;
 
 // Indicators
@@ -141,23 +145,29 @@ function setup() {
         sprites.rightGaugeBg.position.set(1031, 240);
         app.stage.addChild(sprites.rightGaugeBg);
 
-        sprites.rightBoostHilite = new PIXI.Sprite(sheet.textures['blue_hilite_leading.png']);
-        sprites.rightBoostHilite.anchor.set(2.85, 0.5);
-        sprites.rightBoostHilite.position.set(1031, 240);
-        app.stage.addChild(sprites.rightBoostHilite);
+        sprites.rightGaugeBg2 = new PIXI.Sprite(sheet.textures['right_gauge_bg_2.png']);
+        sprites.rightGaugeBg2.anchor.set(0.5, 0.5);
+        sprites.rightGaugeBg2.position.set(1031, 240);
+        sprites.rightGaugeBg2.visible = false;
+        app.stage.addChild(sprites.rightGaugeBg2);
+
+        sprites.rightFuelHilite = new PIXI.Sprite(sheet.textures['green_hilite_leading.png']);
+        sprites.rightFuelHilite.anchor.set(2.85, 0.5);
+        sprites.rightFuelHilite.position.set(1031, 240);
+        app.stage.addChild(sprites.rightFuelHilite);
+
+        sprites.rightFuelHilite2 = new PIXI.Sprite(sheet.textures['red_hilite_leading.png']);
+        sprites.rightFuelHilite2.anchor.set(2.85, 0.5);
+        sprites.rightFuelHilite2.position.set(1031, 240);
+        sprites.rightFuelHilite2.visible = false;
+        app.stage.addChild(sprites.rightFuelHilite2);
 
         // Right gauge boost black overlay
-        graphics.rightGaugeBoostBlackout = new PIXI.Graphics();
-        graphics.rightGaugeBoostBlackout.beginFill(0x000000);
-        graphics.rightGaugeBoostBlackout.drawTorus(1031, 240, 78, 125, boostToAngle(boost), degToRad(35))
-        graphics.rightGaugeBoostBlackout.endFill();
-        app.stage.addChild(graphics.rightGaugeBoostBlackout);
-
-        sprites.rightBoostLaggingMax = new PIXI.Sprite(sheet.textures['lagging_max_boost.png']);
-        sprites.rightBoostLaggingMax.anchor.set(2.85, 0.5);
-        sprites.rightBoostLaggingMax.position.set(1031, 240);
-        sprites.rightBoostLaggingMax.visible = false;
-        app.stage.addChild(sprites.rightBoostLaggingMax);
+        graphics.rightGaugeFuelBlackout = new PIXI.Graphics();
+        graphics.rightGaugeFuelBlackout.beginFill(0x000000);
+        graphics.rightGaugeFuelBlackout.drawTorus(1031, 240, 78, 125, fuelToAngle(fuel), degToRad(35))
+        graphics.rightGaugeFuelBlackout.endFill();
+        app.stage.addChild(graphics.rightGaugeFuelBlackout);
 
         sprites.rightGaugeFg = new PIXI.Sprite(sheet.textures['right_gauge_fg.png']);
         sprites.rightGaugeFg.anchor.set(0.5, 0.5);
@@ -182,11 +192,11 @@ function setup() {
         sprites.coolantNeedle.angle = temperatureToAngle(coolant);
         app.stage.addChild(sprites.coolantNeedle);
 
-        sprites.fuelNeedle = new PIXI.Sprite(sheet.textures['little_needle.png']);
-        sprites.fuelNeedle.anchor.set(6.52, 0.5);
-        sprites.fuelNeedle.position.set(1031, 240);
-        sprites.fuelNeedle.angle = fuelToAngle(fuel);
-        app.stage.addChild(sprites.fuelNeedle);
+        sprites.oilNeedle = new PIXI.Sprite(sheet.textures['little_needle.png']);
+        sprites.oilNeedle.anchor.set(6.52, 0.5);
+        sprites.oilNeedle.position.set(1031, 240);
+        sprites.oilNeedle.angle = pressureToAngle(oil);
+        app.stage.addChild(sprites.oilNeedle);
 
         sprites.centerLogo = new PIXI.Sprite(sheet.textures['center_logo.png']);
         sprites.centerLogo.anchor.set(0.5, 0.5);
@@ -275,14 +285,27 @@ function setup() {
         texts.boostLeft.position.set(247, 337);
         app.stage.addChild(texts.boostLeft);
 
-        texts.boostRight = new PIXI.BitmapText(Math.trunc(boost).toString() + "psi", {fontName: "SmallGauge"});
-        texts.boostRight.anchor.set(0.5, 0.5);
-        texts.boostRight.position.set(1029, 337);
-        app.stage.addChild(texts.boostRight);
+        texts.tripOdometer = new PIXI.Text("Trip: " + formatOdometer(tripOdometer) + " mi", {
+            fontFamily: "Arial",
+            align: "left",
+            fontSize: 20,
+            strokeThickness: 2,
+            fill: "white"
+        });
+        texts.tripOdometer.anchor.set(0.0, 0.5);
+        texts.tripOdometer.position.set(405, 423);
+        texts.tripOdometer.alpha = 0.8;
+        app.stage.addChild(texts.tripOdometer);
 
-        texts.odometer = new PIXI.BitmapText("0 mi", {fontName: "SmallGauge"});
-        texts.odometer.anchor.set(0.5, 0.5);
-        texts.odometer.position.set(640, 420);
+        texts.odometer = new PIXI.Text(formatOdometer(odometer) + " mi", {
+            fontFamily: "Arial",
+            align: "right",
+            fontSize: 20,
+            strokeThickness: 2,
+            fill: "white"
+        });
+        texts.odometer.anchor.set(1.0, 0.5);
+        texts.odometer.position.set(875, 423);
         texts.odometer.alpha = 0.8;
         app.stage.addChild(texts.odometer);
 
@@ -297,6 +320,18 @@ function setup() {
         texts.clock.position.set(640, 55);
         texts.clock.alpha = 0.8;
         app.stage.addChild(texts.clock);
+
+        texts.batteryVoltage = new PIXI.Text(voltage, {
+            fontFamily: "Arial",
+            align: "center",
+            fontSize: 15,
+            strokeThickness: 2,
+            fill: "white"
+        });
+        texts.batteryVoltage.anchor.set(0.5, 0.5);
+        texts.batteryVoltage.position.set(1031, 388.5);
+        texts.batteryVoltage.alpha = 0.8;
+        app.stage.addChild(texts.batteryVoltage);
 
         // Start animations
         app.start();
@@ -315,6 +350,8 @@ function initLoop() {
         coolant += 2.5;
         fuel += 0.025;
         boost += 0.75;
+        voltage += 0.375;
+        oil += 2;
 
         sprites.leftIndicator.alpha += 0.025;
         sprites.rightIndicator.alpha += 0.025;
@@ -331,6 +368,8 @@ function initLoop() {
         coolant -= 2.5;
         fuel -= 0.025;
         boost -= 0.75;
+        voltage -= 0.375;
+        oil -= 2;
 
         sprites.leftIndicator.alpha -= 0.025;
         sprites.rightIndicator.alpha -= 0.025;
@@ -385,6 +424,18 @@ function mainLoop() {
 }
 
 function drawChangingElements() {
+    if (fuel <= 0.25) {
+        sprites.rightFuelHilite2.visible = true;
+        sprites.rightGaugeBg2.visible = true;
+        sprites.rightFuelHilite.visible = false;
+        sprites.rightGaugeBg.visible = false;
+    } else {
+        sprites.rightFuelHilite.visible = true;
+        sprites.rightGaugeBg.visible = true;
+        sprites.rightFuelHilite2.visible = false;
+        sprites.rightGaugeBg2.visible = false;
+    }
+
     // Left gauge boost black overlay
     graphics.leftGaugeBoostBlackout.clear();
     graphics.leftGaugeBoostBlackout.beginFill(0x000000);
@@ -392,17 +443,18 @@ function drawChangingElements() {
     graphics.leftGaugeBoostBlackout.endFill();
 
     // Right gauge boost black overlay
-    graphics.rightGaugeBoostBlackout.clear();
-    graphics.rightGaugeBoostBlackout.beginFill(0x000000);
-    graphics.rightGaugeBoostBlackout.drawTorus(1031, 240, 78, 125, boostToAngle(boost), degToRad(35))
-    graphics.rightGaugeBoostBlackout.endFill();
+    graphics.rightGaugeFuelBlackout.clear();
+    graphics.rightGaugeFuelBlackout.beginFill(0x000000);
+    graphics.rightGaugeFuelBlackout.drawTorus(1031, 240, 78, 125, fuelToAngle(fuel), degToRad(35))
+    graphics.rightGaugeFuelBlackout.endFill();
 
     sprites.rpmNeedle.angle = rpmToAngle(rpm);
     sprites.mphNeedle.angle = mphToAngle(mph);
     sprites.coolantNeedle.angle = temperatureToAngle(coolant);
-    sprites.fuelNeedle.angle = fuelToAngle(fuel);
-    sprites.leftBoostHilite.rotation = boostToAngle(boost) + degToRad(178.5);
-    sprites.rightBoostHilite.rotation = boostToAngle(boost) + degToRad(178.5);
+    sprites.oilNeedle.angle = pressureToAngle(oil);
+    sprites.leftBoostHilite.rotation = boostToAngle(boost) + degToRad(179);
+    sprites.rightFuelHilite.rotation = fuelToAngle(fuel) + degToRad(179);
+    sprites.rightFuelHilite2.rotation = fuelToAngle(fuel) + degToRad(179);
 
     if (keyBState) {
         sprites.centerLogo.visible = false;
@@ -416,27 +468,21 @@ function drawChangingElements() {
         boostLaggingMax = boost;
 
         sprites.leftBoostLaggingMax.visible = false;
-        sprites.rightBoostLaggingMax.visible = false;
     }
 
     if (boost < boostLaggingMax) {
-        sprites.leftBoostLaggingMax.rotation = boostToAngle(boostLaggingMax) + degToRad(178.5);
-        sprites.rightBoostLaggingMax.rotation = boostToAngle(boostLaggingMax) + degToRad(178.5);
+        sprites.leftBoostLaggingMax.rotation = boostToAngle(boostLaggingMax) + degToRad(179);
 
         if (!sprites.leftBoostLaggingMax.visible) {
             sprites.leftBoostLaggingMax.visible = true;
-            sprites.rightBoostLaggingMax.visible = true;
 
             sprites.leftBoostLaggingMax.alpha = 1;
-            sprites.rightBoostLaggingMax.alpha = 1;
         }
 
         sprites.leftBoostLaggingMax.alpha -= 0.01;
-        sprites.rightBoostLaggingMax.alpha -= 0.01;
 
         if (sprites.leftBoostLaggingMax.alpha <= 0) {
             sprites.leftBoostLaggingMax.alpha = 0;
-            sprites.rightBoostLaggingMax.alpha = 0;
 
             boostLaggingMax = 0;
         }
@@ -445,7 +491,9 @@ function drawChangingElements() {
     texts.rpm.text = Math.trunc(rpm).toString();
     texts.mph.text = Math.trunc(mph).toString();
     texts.boostLeft.text = Math.trunc(boost).toString() + "psi";
-    texts.boostRight.text = Math.trunc(boost).toString() + "psi";
+    texts.batteryVoltage.text = formatVoltage(voltage).toString();
+    texts.tripOdometer.text = "Trip: " + formatOdometer(tripOdometer) + " mi";
+    texts.odometer.text = formatOdometer(odometer) + " mi";
 
     if (indicators.left) {
         if (initState < 80) {
@@ -471,8 +519,8 @@ function drawChangingElements() {
     sprites.highBeam.visible = indicators.highBeam && indicators.lowBeam;
     sprites.mil.visible = indicators.mil;
     sprites.oil.visible = indicators.oil;
-    sprites.battery.visible = indicators.battery;
-    sprites.fuel.visible = indicators.fuel;
+    sprites.battery.visible = voltage < 12 || voltage > 15;
+    sprites.fuel.visible = fuel <= 0.25;
 
     if (currentTime() !== clock) {
         clock = currentTime();
@@ -504,14 +552,25 @@ function connectWebSocket() {
             coolant = statusMsg.coolant;
             boost = statusMsg.boost;
             mph = statusMsg.mph;
+            fuel = statusMsg.fuel;
+            voltage = statusMsg.voltage;
+            odometer = statusMsg.odometer;
+            tripOdometer = statusMsg.tripOdometer;
+
             indicators.mil = statusMsg.mil;
             indicators.oil = statusMsg.oil;
             indicators.lowBeam = statusMsg.lowBeam;
             indicators.highBeam = statusMsg.highBeam;
             indicators.left = statusMsg.left;
             indicators.right = statusMsg.right;
-            indicators.battery = statusMsg.battery;
-            indicators.fuel = statusMsg.fuel;
+        });
+
+        stompClient.subscribe('/topic/logs', (message) => {
+            const logMessages = JSON.parse(message.body);
+
+            if (logMessages.length !== 0) {
+                console.log(logMessages);
+            }
         });
     }, () => {
         // Attempt to reconnect on lost connection
@@ -532,6 +591,8 @@ function debugMainLoop() {
         boost += 0.1875;
         coolant += 0.625;
         fuel += 0.00625;
+        voltage += 0.09375;
+        oil += 0.5;
 
         if (mph > MAX_MPH)
             mph = MAX_MPH;
@@ -547,6 +608,12 @@ function debugMainLoop() {
 
         if (fuel > 1)
             fuel = 1;
+
+        if (voltage > 15)
+            voltage = 15;
+
+        if (oil > 90)
+            oil = 90;
     }
 
     if (keyDownState) {
@@ -555,6 +622,8 @@ function debugMainLoop() {
         boost -= 0.1875;
         coolant -= 0.625;
         fuel -= 0.00625;
+        voltage -= 0.09375;
+        oil -= 0.5;
 
         if (mph < 0)
             mph = 0;
@@ -570,6 +639,12 @@ function debugMainLoop() {
 
         if (fuel < 0)
             fuel = 0;
+
+        if (voltage < 0)
+            voltage = 0;
+
+        if (oil < 10)
+            oil = 10;
     }
 }
 

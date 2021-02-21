@@ -1,27 +1,24 @@
-package sh.ellis.pidgc.can
+package sh.ellis.pidgc.canbus
 
 import mu.KotlinLogging
+import sh.ellis.pidgc.config.Config
 import sh.ellis.pidgc.state.State
-import tel.schich.javacan.CanChannels
-import tel.schich.javacan.CanFilter
-import tel.schich.javacan.CanSocketOptions
-import tel.schich.javacan.NetworkDevice
-import tel.schich.javacan.CanFrame
+import tel.schich.javacan.*
 import java.nio.ByteBuffer
 import java.time.Duration
 
 // Manages all interactions with OBD2 via canbus
-class CanManager: Runnable {
+class CanbusManager: Runnable {
 
     private val logger = KotlinLogging.logger {}
 
     @ExperimentalUnsignedTypes
     override fun run() {
         CanChannels.newRawChannel().use {
-            it.bind(NetworkDevice.lookup("vcan0"))
+            it.bind(NetworkDevice.lookup("can0"))
             it.configureBlocking(true)
             it.setOption(CanSocketOptions.FILTER, arrayOf( CanFilter(0x7E8)))
-            it.setOption(CanSocketOptions.SO_RCVTIMEO, Duration.ofMillis(5))
+            it.setOption(CanSocketOptions.SO_RCVTIMEO, Duration.ofMillis(1))
 
             var lastHiRes: Long = System.currentTimeMillis()
             var lastLowRes = lastHiRes
@@ -31,24 +28,40 @@ class CanManager: Runnable {
 
                 if (currentTime - lastHiRes >= 50) {
                     // Request engine RPM
-                    it.write(makeCanRequest(0x0C))
+                    // it.write(makeCanRequest(0x0C))
+                    // readResponse(it)
 
                     lastHiRes = currentTime
                 }
 
                 if (currentTime - lastLowRes >= 500) {
+                    // Request control module voltage
+                    it.write(makeCanRequest(0x42))
+                    readResponse(it)
+
                     // Request coolant temp
                     it.write(makeCanRequest(0x05))
+                    readResponse(it)
+
+                    // Request MIL status
+                    it.write(makeCanRequest(0x01))
+                    readResponse(it)
 
                     lastLowRes = currentTime
                 }
 
-                try {
-                    processResponse(it.read())
-                } catch (e: Exception) {
-                    // This is fine, the read timeout is just being hit.
-                }
+                // Hopefully catch any timed out responses
+                readResponse(it)
             }
+        }
+    }
+
+    @ExperimentalUnsignedTypes
+    private fun readResponse(canChannel : RawCanChannel) {
+        try {
+            processResponse(canChannel.read())
+        } catch (e: Exception) {
+            // This is fine, the read timeout is just being hit.
         }
     }
 
@@ -90,12 +103,22 @@ class CanManager: Runnable {
 
             // MIL
             0x01 -> {
-                if (length != 4) {
-                    logger.error("MIL message length != 4")
+                if (length != 6) {
+                    logger.error("MIL message length != 6: $length")
                     return
                 }
 
                 State.mil = data[3].toUByte().msb.toUInt() == (0xF).toUInt()
+            }
+
+            // Control Module Voltage
+            0x42 -> {
+                if (length != 4) {
+                    logger.error("Control Module Voltage message length != 4")
+                    return
+                }
+
+                State.battery = (((256.0 * data[3].toUByte().toDouble()) + data[4].toUByte().toDouble()) / 1000.0) * Config.batteryCorrection
             }
         }
     }

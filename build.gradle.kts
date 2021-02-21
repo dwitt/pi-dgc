@@ -23,7 +23,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.github.microutils:kotlin-logging:1.12.0")
     implementation("tel.schich:javacan:2.3.0")
-    implementation("com.pi4j:pi4j-core:1.1")
+    implementation("org.ini4j:ini4j:0.5.4")
+
+    implementation("com.fazecast:jSerialComm:[2.0.0,3.0.0)")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

@@ -1,7 +1,7 @@
 // Converts a RPM value (0-8000) from the engine into an angle value for displaying the needle
 function rpmToAngle(rpm) {
     // Limit to usable range
-    rpm = Math.min(Math.max(parseInt(rpm), 0), MAX_RPM);
+    rpm = Math.min(Math.max(rpm, 0.0), MAX_RPM);
 
     let trueAngle = (rpm / MAX_RPM) * 270.0;
 
@@ -11,7 +11,7 @@ function rpmToAngle(rpm) {
 // Converts a MPH value (0-160) from the GPS into an angle value for displaying the needle
 function mphToAngle(mph) {
     // Limit to usable range
-    mph = Math.min(Math.max(parseInt(mph), 0), MAX_MPH);
+    mph = Math.min(Math.max(mph, 0.0), MAX_MPH);
 
     let trueAngle = (mph / MAX_MPH) * 270.0;
 
@@ -21,7 +21,7 @@ function mphToAngle(mph) {
 // Converts a Coolant temperature value (0-270) from the engine into an angle value for displaying the needle
 function temperatureToAngle(temp) {
     // Limit to usable range
-    temp = Math.min(Math.max(parseInt(temp), 170), 270);
+    temp = Math.min(Math.max(temp, 170.0), 270.0);
 
     let trueAngle = ((270.0 - temp) / 100.0) * 50.0;
 
@@ -29,11 +29,21 @@ function temperatureToAngle(temp) {
 }
 
 // Converts a fuel level value (0-1) from the sender into an angle value for displaying the needle
-function fuelToAngle(level) {
-    // Limit to usable range
-    level = Math.min(Math.max(level, 0), 1);
+function fuelToAngle(fuel) {
+    fuel = Math.min(Math.max(fuel, 0.0), 1.0);
 
-    let trueAngle = (1.0 - level) * 50.0;
+    let trueAngle = fuel * 247.0;
+
+    return degToRad(trueAngle + 145.5);
+}
+
+// Converts an oil pressure value (10-90) into an angle value for displaying the needle
+function pressureToAngle(pressure) {
+    const range = 80.0;
+    pressure = Math.min(Math.max(pressure, 10.0), 90.0) - 10.0;
+    pressure = pressure / range;
+
+    let trueAngle = (1.0 - pressure) * 50.0;
 
     return trueAngle - 115.0;
 }
@@ -43,7 +53,7 @@ function degToRad(degrees) {
 }
 
 function boostToAngle(boost) {
-    boost = Math.min(Math.max(boost, 0), MAX_BOOST);
+    boost = Math.min(Math.max(boost, 0.0), MAX_BOOST);
 
     let trueAngle = (boost / MAX_BOOST) * 247.0;
 
@@ -68,4 +78,19 @@ function setAllIndicators(indicators, targetState) {
     }
 
     return targetIndicators;
+}
+
+function formatVoltage(voltage) {
+    return Number(Math.round(voltage+'e'+1)+'e-'+1);
+}
+
+function formatOdometer(odometer) {
+    let rounded = Number(Math.round(odometer+'e'+1)+'e-'+1);
+
+    // Add trailing 0 if not present
+    if (!rounded.toString().includes(".")) {
+        rounded = rounded + ".0";
+    }
+
+    return rounded;
 }

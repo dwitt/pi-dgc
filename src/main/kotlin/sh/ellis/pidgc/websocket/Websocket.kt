@@ -1,15 +1,15 @@
-package sh.ellis.pidgc.dispatch
+package sh.ellis.pidgc.websocket
 
 import mu.KotlinLogging
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import sh.ellis.pidgc.model.Message
+import sh.ellis.pidgc.model.StatusMessage
 import sh.ellis.pidgc.state.State
 
 @Component
-class StatusDispatcher {
+class Websocket {
 
     private val logger = KotlinLogging.logger {}
 
@@ -17,10 +17,10 @@ class StatusDispatcher {
     private val template: SimpMessagingTemplate? = null
 
     @Scheduled(fixedRate = 25)
-    fun dispatchStatus() {
+    fun sendStatus() {
         template?.convertAndSend("/topic/status",
-            Message(
-                mph = State.mph,
+            StatusMessage(
+                mph = State.mph.getAverage(),
                 rpm = State.rpm,
                 boost = State.boost,
                 coolant = State.coolant,
@@ -31,8 +31,14 @@ class StatusDispatcher {
                 highBeam = State.highBeam,
                 left = State.left,
                 right = State.right,
-                battery = State.battery
+                voltage = State.battery,
+                odometer = State.odometer,
+                tripOdometer = State.tripOdometer
             ))
     }
 
+    @Scheduled(fixedRate = 1000)
+    fun sendLogs() {
+        template?.convertAndSend("/topic/logs", State.getLogMessages())
+    }
 }
