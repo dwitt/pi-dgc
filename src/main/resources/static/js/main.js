@@ -1,5 +1,9 @@
 // Constant definitions
-const DEBUG_MODE = false;
+const WIDTH = 1920.0;
+const HEIGHT = 720.0;
+
+const DEBUG_MODE = true;
+
 const MAX_RPM = 8000.0;
 const MAX_MPH = 160.0;
 const MAX_BOOST = 30.0;
@@ -63,8 +67,8 @@ function setup() {
     PIXI.utils.sayHello(type);
 
     app = new PIXI.Application({
-        width: 1280,
-        height: 480,
+        width: WIDTH,
+        height: HEIGHT,
         antialias: true,
         backgroundColor: 0x000000
     });
@@ -103,153 +107,153 @@ function setup() {
 
         sprites.centerLines = new PIXI.Sprite(sheet.textures['center_lines.png']);
         sprites.centerLines.anchor.set(0.5, 0.5);
-        sprites.centerLines.position.set(640, 240);
+        sprites.centerLines.position.set(WIDTH / 2.0, HEIGHT / 2.0);
         app.stage.addChild(sprites.centerLines);
 
         sprites.backupCamera = new PIXI.Sprite(PIXI.Texture.from(video));
         sprites.backupCamera.anchor.set(0.5, 0.5);
         sprites.backupCamera.height = 323.5;
-        sprites.backupCamera.position.set(640, 231);
+        sprites.backupCamera.position.set(WIDTH / 2.0, 0.48125 * HEIGHT);
         sprites.backupCamera.visible = false;
         app.stage.addChild(sprites.backupCamera);
 
         sprites.leftGaugeBg = new PIXI.Sprite(sheet.textures['left_gauge_bg.png']);
         sprites.leftGaugeBg.anchor.set(0.5, 0.5);
-        sprites.leftGaugeBg.position.set(249, 240);
+        sprites.leftGaugeBg.position.set(0.19453125 * WIDTH, HEIGHT / 2.0);
         app.stage.addChild(sprites.leftGaugeBg);
 
         sprites.leftBoostHilite = new PIXI.Sprite(sheet.textures['blue_hilite_leading.png']);
         sprites.leftBoostHilite.anchor.set(2.85, 0.5);
-        sprites.leftBoostHilite.position.set(249, 240);
+        sprites.leftBoostHilite.position.set(0.19453125 * WIDTH, HEIGHT / 2.0);
         app.stage.addChild(sprites.leftBoostHilite);
 
         // Left gauge boost black overlay
         graphics.leftGaugeBoostBlackout = new PIXI.Graphics();
         graphics.leftGaugeBoostBlackout.beginFill(0x000000);
-        graphics.leftGaugeBoostBlackout.drawTorus(249, 240, 78, 125, boostToAngle(boost), degToRad(35))
+        graphics.leftGaugeBoostBlackout.drawTorus(0.19453125 * WIDTH, HEIGHT / 2.0, 78, 125, boostToAngle(boost), degToRad(35))
         graphics.leftGaugeBoostBlackout.endFill();
         app.stage.addChild(graphics.leftGaugeBoostBlackout);
 
         sprites.leftBoostLaggingMax = new PIXI.Sprite(sheet.textures['lagging_max_boost.png']);
         sprites.leftBoostLaggingMax.anchor.set(2.85, 0.5);
-        sprites.leftBoostLaggingMax.position.set(249, 240);
+        sprites.leftBoostLaggingMax.position.set(0.19453125 * WIDTH, HEIGHT / 2.0);
         sprites.leftBoostLaggingMax.visible = false;
         app.stage.addChild(sprites.leftBoostLaggingMax);
 
         sprites.leftGaugeFg = new PIXI.Sprite(sheet.textures['left_gauge_fg.png']);
         sprites.leftGaugeFg.anchor.set(0.5, 0.5);
-        sprites.leftGaugeFg.position.set(249, 240);
+        sprites.leftGaugeFg.position.set(0.19453125 * WIDTH, HEIGHT / 2.0);
         app.stage.addChild(sprites.leftGaugeFg);
 
         sprites.rightGaugeBg = new PIXI.Sprite(sheet.textures['right_gauge_bg.png']);
         sprites.rightGaugeBg.anchor.set(0.5, 0.5);
-        sprites.rightGaugeBg.position.set(1031, 240);
+        sprites.rightGaugeBg.position.set(0.80546875 * WIDTH, HEIGHT / 2.0);
         app.stage.addChild(sprites.rightGaugeBg);
 
         sprites.rightGaugeBg2 = new PIXI.Sprite(sheet.textures['right_gauge_bg_2.png']);
         sprites.rightGaugeBg2.anchor.set(0.5, 0.5);
-        sprites.rightGaugeBg2.position.set(1031, 240);
+        sprites.rightGaugeBg2.position.set(0.80546875 * WIDTH, HEIGHT / 2.0);
         sprites.rightGaugeBg2.visible = false;
         app.stage.addChild(sprites.rightGaugeBg2);
 
         sprites.rightFuelHilite = new PIXI.Sprite(sheet.textures['green_hilite_leading.png']);
         sprites.rightFuelHilite.anchor.set(2.85, 0.5);
-        sprites.rightFuelHilite.position.set(1031, 240);
+        sprites.rightFuelHilite.position.set(0.80546875 * WIDTH, HEIGHT / 2.0);
         app.stage.addChild(sprites.rightFuelHilite);
 
         sprites.rightFuelHilite2 = new PIXI.Sprite(sheet.textures['red_hilite_leading.png']);
         sprites.rightFuelHilite2.anchor.set(2.85, 0.5);
-        sprites.rightFuelHilite2.position.set(1031, 240);
+        sprites.rightFuelHilite2.position.set(0.80546875 * WIDTH, HEIGHT / 2.0);
         sprites.rightFuelHilite2.visible = false;
         app.stage.addChild(sprites.rightFuelHilite2);
 
         // Right gauge boost black overlay
         graphics.rightGaugeFuelBlackout = new PIXI.Graphics();
         graphics.rightGaugeFuelBlackout.beginFill(0x000000);
-        graphics.rightGaugeFuelBlackout.drawTorus(1031, 240, 78, 125, fuelToAngle(fuel), degToRad(35))
+        graphics.rightGaugeFuelBlackout.drawTorus(0.80546875 * WIDTH, HEIGHT / 2.0, 78, 125, fuelToAngle(fuel), degToRad(35))
         graphics.rightGaugeFuelBlackout.endFill();
         app.stage.addChild(graphics.rightGaugeFuelBlackout);
 
         sprites.rightGaugeFg = new PIXI.Sprite(sheet.textures['right_gauge_fg.png']);
         sprites.rightGaugeFg.anchor.set(0.5, 0.5);
-        sprites.rightGaugeFg.position.set(1031, 240);
+        sprites.rightGaugeFg.position.set(0.80546875 * WIDTH, HEIGHT / 2.0);
         app.stage.addChild(sprites.rightGaugeFg);
 
         sprites.rpmNeedle = new PIXI.Sprite(sheet.textures['big_needle.png']);
         sprites.rpmNeedle.anchor.set(2.54, 0.5);
-        sprites.rpmNeedle.position.set(249, 240);
+        sprites.rpmNeedle.position.set(0.19453125 * WIDTH, HEIGHT / 2.0);
         sprites.rpmNeedle.angle = rpmToAngle(rpm);
         app.stage.addChild(sprites.rpmNeedle);
 
         sprites.mphNeedle = new PIXI.Sprite(sheet.textures['big_needle.png']);
         sprites.mphNeedle.anchor.set(2.54, 0.5);
-        sprites.mphNeedle.position.set(1031, 240);
+        sprites.mphNeedle.position.set(0.80546875 * WIDTH, HEIGHT / 2.0);
         sprites.mphNeedle.angle = mphToAngle(mph);
         app.stage.addChild(sprites.mphNeedle);
 
         sprites.coolantNeedle = new PIXI.Sprite(sheet.textures['little_needle.png']);
         sprites.coolantNeedle.anchor.set(6.52, 0.5);
-        sprites.coolantNeedle.position.set(249, 240);
+        sprites.coolantNeedle.position.set(0.19453125 * WIDTH, HEIGHT / 2.0);
         sprites.coolantNeedle.angle = temperatureToAngle(coolant);
         app.stage.addChild(sprites.coolantNeedle);
 
         sprites.oilNeedle = new PIXI.Sprite(sheet.textures['little_needle.png']);
         sprites.oilNeedle.anchor.set(6.52, 0.5);
-        sprites.oilNeedle.position.set(1031, 240);
+        sprites.oilNeedle.position.set(0.80546875 * WIDTH, HEIGHT / 2.0);
         sprites.oilNeedle.angle = pressureToAngle(oil);
         app.stage.addChild(sprites.oilNeedle);
 
         sprites.centerLogo = new PIXI.Sprite(sheet.textures['center_logo.png']);
         sprites.centerLogo.anchor.set(0.5, 0.5);
-        sprites.centerLogo.position.set(640, 240);
+        sprites.centerLogo.position.set(WIDTH / 2.0, HEIGHT / 2.0);
         sprites.centerLogo.alpha = 0;
         app.stage.addChild(sprites.centerLogo);
 
         sprites.leftIndicator = new PIXI.Sprite(sheet.textures['left_indicator.png']);
         sprites.leftIndicator.anchor.set(0.5, 0.5);
-        sprites.leftIndicator.position.set(490, 115);
+        sprites.leftIndicator.position.set(0.3828125 * WIDTH, 0.2395833333 * HEIGHT);
         sprites.leftIndicator.alpha = 0;
         app.stage.addChild(sprites.leftIndicator);
 
         sprites.rightIndicator = new PIXI.Sprite(sheet.textures['right_indicator.png']);
         sprites.rightIndicator.anchor.set(0.5, 0.5);
-        sprites.rightIndicator.position.set(790, 115);
+        sprites.rightIndicator.position.set(0.6171875 * WIDTH, 0.2395833333 * HEIGHT);
         sprites.rightIndicator.alpha = 0;
         app.stage.addChild(sprites.rightIndicator);
 
         sprites.lowBeam = new PIXI.Sprite(sheet.textures['low_beam.png']);
         sprites.lowBeam.anchor.set(0.5, 0.5);
-        sprites.lowBeam.position.set(565, 115);
+        sprites.lowBeam.position.set(0.44140625 * WIDTH, 0.2395833333 * HEIGHT);
         sprites.lowBeam.alpha = 0;
         app.stage.addChild(sprites.lowBeam);
 
         sprites.highBeam = new PIXI.Sprite(sheet.textures['high_beam.png']);
         sprites.highBeam.anchor.set(0.5, 0.5);
-        sprites.highBeam.position.set(565, 115);
+        sprites.highBeam.position.set(0.44140625 * WIDTH, 0.2395833333 * HEIGHT);
         sprites.highBeam.alpha = 0;
         app.stage.addChild(sprites.highBeam);
 
         sprites.mil = new PIXI.Sprite(sheet.textures['mil.png']);
         sprites.mil.anchor.set(0.5, 0.5);
-        sprites.mil.position.set(640, 115);
+        sprites.mil.position.set(WIDTH / 2.0, 0.2395833333 * HEIGHT);
         sprites.mil.alpha = 0;
         app.stage.addChild(sprites.mil);
 
         sprites.oil = new PIXI.Sprite(sheet.textures['oil.png']);
         sprites.oil.anchor.set(0.5, 0.5);
-        sprites.oil.position.set(715, 115);
+        sprites.oil.position.set(0.55859375 * WIDTH, 0.2395833333 * HEIGHT);
         sprites.oil.alpha = 0;
         app.stage.addChild(sprites.oil);
 
         sprites.battery = new PIXI.Sprite(sheet.textures['battery.png']);
         sprites.battery.anchor.set(0.5, 0.5);
-        sprites.battery.position.set(640, 362);
+        sprites.battery.position.set(WIDTH / 2.0, 0.7541666667 * HEIGHT);
         sprites.battery.alpha = 0;
         app.stage.addChild(sprites.battery);
 
         sprites.fuel = new PIXI.Sprite(sheet.textures['fuel.png']);
         sprites.fuel.anchor.set(0.5, 0.5);
-        sprites.fuel.position.set(744, 362);
+        sprites.fuel.position.set(0.58125 * WIDTH, 0.7541666667 * HEIGHT);
         sprites.fuel.alpha = 0;
         app.stage.addChild(sprites.fuel);
 
@@ -273,17 +277,17 @@ function setup() {
 
         texts.rpm = new PIXI.BitmapText(Math.trunc(rpm).toString(), {fontName: "LargeGauge"});
         texts.rpm.anchor.set(0.5, 0.5);
-        texts.rpm.position.set(247, 240);
+        texts.rpm.position.set(0.19296875 * WIDTH, HEIGHT / 2.0);
         app.stage.addChild(texts.rpm);
 
         texts.mph = new PIXI.BitmapText(Math.trunc(mph).toString(), {fontName: "LargeGauge"});
         texts.mph.anchor.set(0.5, 0.5);
-        texts.mph.position.set(1029, 240);
+        texts.mph.position.set(0.80390625 * WIDTH, HEIGHT / 2.0);
         app.stage.addChild(texts.mph);
 
         texts.boostLeft = new PIXI.BitmapText(Math.trunc(boost).toString() + "psi", {fontName: "SmallGauge"});
         texts.boostLeft.anchor.set(0.5, 0.5);
-        texts.boostLeft.position.set(247, 337);
+        texts.boostLeft.position.set(0.19296875 * WIDTH, 0.7020833333 * HEIGHT);
         app.stage.addChild(texts.boostLeft);
 
         texts.tripOdometer = new PIXI.Text("Trip: " + formatOdometer(tripOdometer) + " mi", {
@@ -294,7 +298,7 @@ function setup() {
             fill: "white"
         });
         texts.tripOdometer.anchor.set(0.0, 0.5);
-        texts.tripOdometer.position.set(405, 423);
+        texts.tripOdometer.position.set(0.31640625 * WIDTH, 0.9125 * HEIGHT);
         texts.tripOdometer.alpha = 0.8;
         app.stage.addChild(texts.tripOdometer);
 
@@ -306,7 +310,7 @@ function setup() {
             fill: "white"
         });
         texts.odometer.anchor.set(1.0, 0.5);
-        texts.odometer.position.set(875, 423);
+        texts.odometer.position.set(0.68359375 * WIDTH, 0.9125 * HEIGHT);
         texts.odometer.alpha = 0.8;
         app.stage.addChild(texts.odometer);
 
@@ -318,7 +322,7 @@ function setup() {
             fill: "white"
         });
         texts.clock.anchor.set(0.5, 0.5);
-        texts.clock.position.set(640, 55);
+        texts.clock.position.set(WIDTH / 2.0, 0.1145833333 * HEIGHT);
         texts.clock.alpha = 0.8;
         app.stage.addChild(texts.clock);
 
@@ -330,7 +334,7 @@ function setup() {
             fill: "white"
         });
         texts.batteryVoltage.anchor.set(0.5, 0.5);
-        texts.batteryVoltage.position.set(1031, 388.5);
+        texts.batteryVoltage.position.set(0.80546875 * WIDTH, 0.809375 * HEIGHT);
         texts.batteryVoltage.alpha = 0.8;
         app.stage.addChild(texts.batteryVoltage);
 
@@ -410,7 +414,7 @@ function initLoop() {
         boostLaggingMax = 0;
 
         // Create websocket
-        connectWebSocket();
+        if (!DEBUG_MODE) connectWebSocket();
 
         // Start initialization loop
         app.ticker.add(mainLoop);
@@ -440,13 +444,13 @@ function drawChangingElements() {
     // Left gauge boost black overlay
     graphics.leftGaugeBoostBlackout.clear();
     graphics.leftGaugeBoostBlackout.beginFill(0x000000);
-    graphics.leftGaugeBoostBlackout.drawTorus(249, 240, 78, 125, boostToAngle(boost), degToRad(35))
+    graphics.leftGaugeBoostBlackout.drawTorus(0.19453125 * WIDTH, HEIGHT / 2.0, 78, 125, boostToAngle(boost), degToRad(35))
     graphics.leftGaugeBoostBlackout.endFill();
 
     // Right gauge boost black overlay
     graphics.rightGaugeFuelBlackout.clear();
     graphics.rightGaugeFuelBlackout.beginFill(0x000000);
-    graphics.rightGaugeFuelBlackout.drawTorus(1031, 240, 78, 125, fuelToAngle(fuel), degToRad(35))
+    graphics.rightGaugeFuelBlackout.drawTorus(0.80546875 * WIDTH, HEIGHT / 2.0, 78, 125, fuelToAngle(fuel), degToRad(35))
     graphics.rightGaugeFuelBlackout.endFill();
 
     sprites.rpmNeedle.angle = rpmToAngle(rpm);
