@@ -2,12 +2,18 @@ package sh.ellis.pidgc
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.scheduling.annotation.EnableScheduling
 import sh.ellis.pidgc.canbus.CanbusManager
 import sh.ellis.pidgc.config.Config
+import sh.ellis.pidgc.controllers.InteractionController
 import sh.ellis.pidgc.serial.Serial
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
+import sh.ellis.pidgc.utils.isWindows
+
 
 @SpringBootApplication
 @EnableScheduling
@@ -17,12 +23,26 @@ class PiDGCApplication {
     @PostConstruct
     fun init() {
         Config
-//        Thread(CanbusManager()).start()
-        Thread(Serial).start()
+
+        if (!isWindows()) {
+            Thread(CanbusManager()).start()
+            Thread(Serial).start()
+        }
     }
 
     @PreDestroy
     fun shutdown() {
+    }
+
+    // Open Chromium once everything is done
+    @EventListener(ApplicationReadyEvent::class)
+    fun started() {
+        if (!isWindows()) {
+            // Start Chromium
+            try {
+                ProcessBuilder("bash", "-c", "sudo -u pi chromium-browser --disable-infobars --kiosk 'http://localhost:8080'").start()
+            } catch (e: Exception) {}
+        }
     }
 
 }

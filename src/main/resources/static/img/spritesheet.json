@@ -10,7 +10,7 @@
 },
 "big_needle.png":
 {
-	"frame": {"x":534,"y":0,"w":81,"h":54},
+	"frame": {"x":566,"y":0,"w":81,"h":54},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":54},
@@ -26,7 +26,7 @@
 },
 "center_lines.png":
 {
-	"frame": {"x":1350,"y":0,"w":570,"h":327},
+	"frame": {"x":1382,"y":0,"w":570,"h":327},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":570,"h":327},
@@ -34,7 +34,7 @@
 },
 "center_logo.png":
 {
-	"frame": {"x":616,"y":0,"w":179,"h":187},
+	"frame": {"x":648,"y":0,"w":179,"h":187},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":179,"h":187},
@@ -82,7 +82,7 @@
 },
 "left_gauge_fg.png":
 {
-	"frame": {"x":796,"y":0,"w":276,"h":276},
+	"frame": {"x":828,"y":0,"w":276,"h":276},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":276},
@@ -90,7 +90,7 @@
 },
 "left_indicator.png":
 {
-	"frame": {"x":451,"y":0,"w":40,"h":47},
+	"frame": {"x":483,"y":0,"w":40,"h":47},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":47},
@@ -136,6 +136,14 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":8},
 	"sourceSize": {"w":42,"h":8}
 },
+"reset.png":
+{
+	"frame": {"x":451,"y":0,"w":31,"h":31},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":31,"h":31},
+	"sourceSize": {"w":31,"h":31}
+},
 "right_gauge_bg.png":
 {
 	"frame": {"x":496,"y":328,"w":497,"h":480},
@@ -154,7 +162,7 @@
 },
 "right_gauge_fg.png":
 {
-	"frame": {"x":1073,"y":0,"w":276,"h":276},
+	"frame": {"x":1105,"y":0,"w":276,"h":276},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":276},
@@ -162,7 +170,7 @@
 },
 "right_indicator.png":
 {
-	"frame": {"x":492,"y":0,"w":41,"h":47},
+	"frame": {"x":524,"y":0,"w":41,"h":47},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":41,"h":47},
@@ -175,8 +183,8 @@
 	"version": "1.0",
 	"image": "spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":1920,"h":808},
+	"size": {"w":1952,"h":808},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:a408eead6297d41fb00e921f7408510e:1ae625aa888bd92b0380b47164427708:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:d8eb561f6f2b4dd7cf7e7c0265aefc24:54862517851e2449073fd5daeaddd774:729adc6043343cfda41c447ce8f464d6$"
 }
 }

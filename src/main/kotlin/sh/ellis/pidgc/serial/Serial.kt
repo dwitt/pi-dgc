@@ -8,6 +8,7 @@ import com.fazecast.jSerialComm.SerialPortMessageListener
 import org.springframework.ui.context.Theme
 import sh.ellis.pidgc.config.Config
 import sh.ellis.pidgc.state.State
+import sh.ellis.pidgc.utils.isWindows
 import java.lang.Exception
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -64,7 +65,7 @@ object Serial : Runnable {
                     comPort?.closePort()
                 } catch (e: Exception) {}
 
-                val portString = if (isWin()) "COM4" else "/dev/ttyACM0"
+                val portString = if (isWindows()) "COM4" else "/dev/ttyACM0"
                 comPort = SerialPort.getCommPort(portString)
                 comPort?.openPort()
                 comPort?.setRTS()
@@ -136,14 +137,5 @@ object Serial : Runnable {
         // Store new values
         lastPulseTime = currentTime
         lastPulseValue = pulses
-    }
-
-    private fun isWin(): Boolean {
-        val os = System.getProperty("os.name").toLowerCase()
-
-        return when {
-            os.contains("win") -> true
-            else -> false
-        }
     }
 }

@@ -42,6 +42,9 @@ let stompClient;
 // Clock value
 let clock = "0:00 AM";
 
+// XHTTP
+const xhttp = new XMLHttpRequest();
+
 // Keyboard bindings
 const keyUp = keyboard("ArrowUp");
 let keyUpState = false;
@@ -253,6 +256,17 @@ function setup() {
         sprites.fuel.alpha = 0;
         app.stage.addChild(sprites.fuel);
 
+        sprites.resetTrip = new PIXI.Sprite(sheet.textures['reset.png']);
+        sprites.resetTrip.anchor.set(0.5, 0.5);
+        sprites.resetTrip.position.set(410, 423);
+        sprites.resetTrip.alpha = 0.8;
+        sprites.resetTrip.interactive = true;
+        sprites.resetTrip.on('pointerdown', () => {
+            xhttp.open("GET", "/interaction/resetTrip", true);
+            xhttp.send();
+        });
+        app.stage.addChild(sprites.resetTrip);
+
         // Main gauge font
         PIXI.BitmapFont.from("LargeGauge", {
             fontFamily: "Arial",
@@ -294,7 +308,7 @@ function setup() {
             fill: "white"
         });
         texts.tripOdometer.anchor.set(0.0, 0.5);
-        texts.tripOdometer.position.set(405, 423);
+        texts.tripOdometer.position.set(430, 423);
         texts.tripOdometer.alpha = 0.8;
         app.stage.addChild(texts.tripOdometer);
 
