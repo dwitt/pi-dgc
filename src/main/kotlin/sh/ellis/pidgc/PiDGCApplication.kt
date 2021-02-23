@@ -15,6 +15,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.EventListener
 import sh.ellis.pidgc.utils.isWindows
+import kotlin.concurrent.thread
 
 
 @Configuration
@@ -42,9 +43,12 @@ class PiDGCApplication {
     fun started() {
         if (!isWindows()) {
             // Start Chromium
-            try {
-                ProcessBuilder("bash", "-c", "sudo -u pi chromium-browser --disable-infobars --kiosk 'http://localhost:8080'").start()
-            } catch (e: Exception) {}
+            thread(true) {
+                try {
+//                    ProcessBuilder("bash", "-c", "sudo -u pi chromium-browser 'http://localhost:8080'").start()
+                } catch (e: Exception) {
+                }
+            }
         }
     }
 

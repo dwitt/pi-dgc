@@ -37,6 +37,8 @@ dependencies {
 
     implementation("com.fazecast:jSerialComm:[2.0.0,3.0.0)")
 
+    annotationProcessor("org.springframework:spring-context-indexer:2.4.2")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
