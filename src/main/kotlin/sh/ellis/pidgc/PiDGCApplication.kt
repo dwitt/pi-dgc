@@ -41,15 +41,15 @@ class PiDGCApplication {
     // Open Chromium once everything is done
     @EventListener(ApplicationReadyEvent::class)
     fun started() {
-        if (!isWindows()) {
-            // Start Chromium
-            thread(true) {
-                try {
+//        if (!isWindows()) {
+//            // Start Chromium
+//            thread(true) {
+//                try {
 //                    ProcessBuilder("bash", "-c", "sudo -u pi chromium-browser 'http://localhost:8080'").start()
-                } catch (e: Exception) {
-                }
-            }
-        }
+//                } catch (e: Exception) {
+//                }
+//            }
+//        }
     }
 
 }
