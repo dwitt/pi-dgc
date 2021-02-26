@@ -18,13 +18,17 @@ boot_delay=0
 dtparam=spi=on
 dtoverlay=mcp2515-can0,oscillator=16000000,interrupt=25
 dtoverlay=spi-bcm2835-overlay
+dtparam=i2c_arm=on
+dtoverlay=i2c-rtc,pcf8523
 ~~~
 - Add `quiet fastboot` to `/boot/cmdline.txt`
+- Add contents of `linux/network_interfaces` from repo into file `/etc/network/interfaces`
 - Add contents of `linux/.xinitrc` from repo into file `~/.xinitrc`
 - Add contents of `linux/.bash_profile` from repo into file `~/.bash_profile`
 - Copy contents of `linux/pidgc.service` from repo into file `/etc/systemd/system/pidgc.service`
 - `sudo systemctl enable pidgc.service`
 - `sudo /sbin/ip link set can0 up type can bitrate 500000`
+- `sudo adduser pi dialout`
 - Disable unused services once everything is done. This decreases boot time substantially:
   - sudo systemctl disable ssh
   - sudo systemctl disable hciuart 

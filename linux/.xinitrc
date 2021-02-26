@@ -14,7 +14,7 @@ sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' ~/.config/chromium/'Loc
 sed -i 's/"exited_cleanly":false/"exited_cleanly":true/; s/"exit_type":"[^"]\+"/"exit_type":"Normal"/' ~/.config/chromium/Default/Preferences
 
 unclutter &
-chromium-browser http://localhost:8080 --window-size=1280,480 \
+chromium-browser http://localhost:8080 --window-size=1280,480 --window-position=0,0 \
     --start-fullscreen --kiosk --noerrdialogs \
     --disable-translate --no-first-run --fast --fast-start \
     --disable-infobars --disable-features=TranslateUI \

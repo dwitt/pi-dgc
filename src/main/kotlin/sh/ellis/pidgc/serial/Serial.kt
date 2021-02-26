@@ -9,6 +9,7 @@ import org.springframework.ui.context.Theme
 import sh.ellis.pidgc.config.Config
 import sh.ellis.pidgc.state.State
 import sh.ellis.pidgc.utils.isWindows
+import sh.ellis.pidgc.utils.shutdownSystem
 import java.lang.Exception
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -92,6 +93,8 @@ object Serial : Runnable {
             "pulses" -> handlePulses(parts)
             "rev" -> State.reverse = parts[1].toBoolean()
             "right" -> State.right = parts[1].toBoolean()
+            "volt" -> State.batt = parts[1].toDouble()
+            "sd" -> shutdownSystem()
         }
     }
 

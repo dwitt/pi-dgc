@@ -558,7 +558,7 @@ function connectWebSocket() {
     stompClient.debug = DEBUG_MODE;
 
     stompClient.connect({}, (frame) => {
-        console.log('Connected: ' + frame);
+        console.log('Connected to: ' + frame);
 
         stompClient.subscribe('/topic/status', (message) => {
             const statusMsg = JSON.parse(message.body);

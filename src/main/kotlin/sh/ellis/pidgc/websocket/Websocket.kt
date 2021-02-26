@@ -16,8 +16,15 @@ class Websocket {
     @Autowired
     private val template: SimpMessagingTemplate? = null
 
-    @Scheduled(fixedRate = 25)
+    private var logX: Int = 0
+
+    @Scheduled(fixedRate = 50)
     fun sendStatus() {
+
+        if (logX % 50 == 0)
+            logger.info("Sending status...")
+        logX++;
+
         template?.convertAndSend("/topic/status",
             StatusMessage(
                 mph = State.mph.getAverage(),

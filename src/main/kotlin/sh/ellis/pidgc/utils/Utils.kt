@@ -8,3 +8,8 @@ fun isWindows(): Boolean {
         else -> false
     }
 }
+
+fun shutdownSystem() {
+    val p = Runtime.getRuntime().exec("sudo shutdown -h now")
+    p.waitFor()
+}

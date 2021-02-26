@@ -15,12 +15,12 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.EventListener
 import sh.ellis.pidgc.utils.isWindows
+import sh.ellis.pidgc.websocket.Websocket
 import kotlin.concurrent.thread
 
 
-@Configuration
-@EnableAutoConfiguration
 @EnableScheduling
+@SpringBootApplication
 class PiDGCApplication {
 
     // Start main threads once Spring is loaded
@@ -33,25 +33,6 @@ class PiDGCApplication {
             Thread(Serial).start()
         }
     }
-
-    @PreDestroy
-    fun shutdown() {
-    }
-
-    // Open Chromium once everything is done
-    @EventListener(ApplicationReadyEvent::class)
-    fun started() {
-//        if (!isWindows()) {
-//            // Start Chromium
-//            thread(true) {
-//                try {
-//                    ProcessBuilder("bash", "-c", "sudo -u pi chromium-browser 'http://localhost:8080'").start()
-//                } catch (e: Exception) {
-//                }
-//            }
-//        }
-    }
-
 }
 
 fun main(args: Array<String>) {
