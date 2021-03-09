@@ -10,7 +10,7 @@
 },
 "big_needle.png":
 {
-	"frame": {"x":566,"y":0,"w":81,"h":54},
+	"frame": {"x":601,"y":0,"w":81,"h":54},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":54},
@@ -26,7 +26,7 @@
 },
 "center_lines.png":
 {
-	"frame": {"x":1382,"y":0,"w":570,"h":327},
+	"frame": {"x":1417,"y":0,"w":570,"h":327},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":570,"h":327},
@@ -34,11 +34,19 @@
 },
 "center_logo.png":
 {
-	"frame": {"x":648,"y":0,"w":179,"h":187},
+	"frame": {"x":683,"y":0,"w":179,"h":187},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":179,"h":187},
 	"sourceSize": {"w":179,"h":187}
+},
+"coolant.png":
+{
+	"frame": {"x":399,"y":0,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":34,"h":30},
+	"sourceSize": {"w":34,"h":30}
 },
 "fuel.png":
 {
@@ -58,7 +66,7 @@
 },
 "high_beam.png":
 {
-	"frame": {"x":399,"y":0,"w":51,"h":31},
+	"frame": {"x":434,"y":0,"w":51,"h":31},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":51,"h":31},
@@ -82,7 +90,7 @@
 },
 "left_gauge_fg.png":
 {
-	"frame": {"x":828,"y":0,"w":276,"h":276},
+	"frame": {"x":863,"y":0,"w":276,"h":276},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":276},
@@ -90,7 +98,7 @@
 },
 "left_indicator.png":
 {
-	"frame": {"x":483,"y":0,"w":40,"h":47},
+	"frame": {"x":518,"y":0,"w":40,"h":47},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":47},
@@ -138,7 +146,7 @@
 },
 "reset.png":
 {
-	"frame": {"x":451,"y":0,"w":31,"h":31},
+	"frame": {"x":486,"y":0,"w":31,"h":31},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":31,"h":31},
@@ -162,7 +170,7 @@
 },
 "right_gauge_fg.png":
 {
-	"frame": {"x":1105,"y":0,"w":276,"h":276},
+	"frame": {"x":1140,"y":0,"w":276,"h":276},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":276},
@@ -170,7 +178,7 @@
 },
 "right_indicator.png":
 {
-	"frame": {"x":524,"y":0,"w":41,"h":47},
+	"frame": {"x":559,"y":0,"w":41,"h":47},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":41,"h":47},
@@ -183,8 +191,8 @@
 	"version": "1.0",
 	"image": "spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":1952,"h":808},
+	"size": {"w":1987,"h":808},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:d8eb561f6f2b4dd7cf7e7c0265aefc24:54862517851e2449073fd5daeaddd774:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:8f4a5739e72829101c4f84e383dba1c0:6c7a89b5d86bdcdd8a5fda2a23b389d5:729adc6043343cfda41c447ce8f464d6$"
 }
 }

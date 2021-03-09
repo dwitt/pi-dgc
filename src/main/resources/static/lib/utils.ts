@@ -75,17 +75,16 @@ export module Utils {
         return hours + ":" + minutes + " " + half;
     }
 
-    export function setAllIndicators(indicators: IndicatorContainer, targetState: boolean): IndicatorContainer {
-        return {
-            left: targetState,
-            right: targetState,
-            lowBeam: targetState,
-            highBeam: targetState,
-            mil: targetState,
-            oil: targetState,
-            battery: targetState,
-            fuel: targetState,
-        };
+    export function setAllIndicators(indicators: IndicatorContainer, targetState: boolean) {
+        indicators.left = targetState;
+        indicators.right = targetState;
+        indicators.lowBeam = targetState;
+        indicators.highBeam = targetState;
+        indicators.mil = targetState;
+        indicators.oil = targetState;
+        indicators.battery = targetState;
+        indicators.fuel = targetState;
+        indicators.coolant = targetState;
     }
 
     export function formatVoltage(voltage: number) {

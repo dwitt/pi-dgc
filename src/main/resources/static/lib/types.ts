@@ -9,9 +9,11 @@ export interface IndicatorContainer {
     oil?: boolean;
     battery?: boolean;
     fuel?: boolean;
+    coolant?: boolean;
 }
 
 export interface SpriteContainer {
+    coolant?: PIXI.Sprite;
     resetTrip?: PIXI.Sprite;
     fuel?: PIXI.Sprite;
     battery?: PIXI.Sprite;
@@ -56,28 +58,43 @@ export interface GraphicsContainer {
 }
 
 interface StatusMessageBody {
-    mph?: number;            // Serial
-    rpm?: number;               // OBD2
-    boost?: number;          // OBD2
-    coolant?: number;           // OBD2
-    fuel?: number;           // Serial
-    mil?: boolean;           // OBD2
-    oilPressure?: number;    // OBD2
-    lowBeam?: boolean;       // Serial
-    highBeam?: boolean;      // Serial
-    left?: boolean;          // Serial
-    reverse?: boolean;       // Serial
-    right?: boolean;         // Serial
-    voltage?: number;        // OBD2
-    odometer?: number;       // Serial + Config
-    temperature?: number;    // Serial + Config
-    tripOdometer?: number;    // Serial + Config
+    mph: number;            // Serial
+    rpm: number;               // OBD2
+    boost: number;          // OBD2
+    coolant: number;           // OBD2
+    fuel: number;           // Serial
+    mil: boolean;           // OBD2
+    oilPressure: number;    // OBD2
+    lowBeam: boolean;       // Serial
+    highBeam: boolean;      // Serial
+    left: boolean;          // Serial
+    reverse: boolean;       // Serial
+    right: boolean;         // Serial
+    voltage: number;        // OBD2
+    odometer: number;       // Serial + Config
+    temperature: number;    // Serial + Config
+    tripOdometer: number;    // Serial + Config
 }
 
 export interface StatusMessage {
-    body?: StatusMessageBody
+    body: StatusMessageBody
 }
 
 export interface LogMessage {
     body?: string[]
+}
+
+export interface VehicleParameters {
+    rpm: number;
+    mph: number;
+    coolant: number;
+    fuel: number;
+    boost: number;
+    voltage: number;
+    odometer: number;
+    tripOdometer: number;
+    boostLaggingMax?: number;
+    reverse: boolean;
+    temperature: number;
+    oilPressure: number;
 }
