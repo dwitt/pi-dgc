@@ -1,59 +1,76 @@
+import * as PIXI from "pixi.js"
+import {Utils} from "./utils";
+import rpmToAngle = Utils.rpmToAngle;
+import mphToAngle = Utils.mphToAngle;
+import temperatureToAngle = Utils.temperatureToAngle;
+import pressureToAngle = Utils.pressureToAngle;
+import formatOdometer = Utils.formatOdometer;
+import currentTime = Utils.currentTime;
+import setAllIndicators = Utils.setAllIndicators;
+import {
+    GraphicsContainer,
+    IndicatorContainer,
+    LogMessage,
+    SpriteContainer,
+    StatusMessage,
+    TextContainer
+} from "./types";
+import '@pixi/graphics-extras';
+import boostToAngle = Utils.boostToAngle;
+import fuelToAngle = Utils.fuelToAngle;
+import degToRad = Utils.degToRad;
+import formatVoltage = Utils.formatVoltage;
+import SockJS from "sockjs-client";
+import { Stomp } from '@stomp/stompjs';
+
+
 // Constant definitions
-const DEBUG_MODE = false;
-const MAX_RPM = 8000.0;
-const MAX_MPH = 160.0;
-const MAX_BOOST = 30.0;
+export const SIMULATION = true;
+export const MAX_RPM = 8000.0;
+export const MAX_MPH = 160.0;
+export const MAX_BOOST = 30.0;
 
 // Tracking variables
-let rpm = 0;
-let mph = 0.0;
-let coolant = 170;
-let fuel = 0.0;
-let initState = 0;
-let boost = 0;
-let voltage = 0.0;
-let oil = 10;
-let odometer = 0.0;
-let tripOdometer = 0.0;
-let boostLaggingMax = 0;
+let rpm: number = 0;
+let mph: number = 0.0;
+let coolant: number = 170;
+let fuel: number = 0.0;
+let initState: number = 0;
+let boost: number = 0;
+let voltage: number = 0.0;
+let odometer: number = 0.0;
+let tripOdometer: number = 0.0;
+let boostLaggingMax: number = 0;
 let reverse = false;
+let temperature: number = 32;
+let oilPressure: number = 0.0;
 
 // Indicators
-let indicators = {};
+let indicators: IndicatorContainer = {};
 
 // Pixi Application
-let app;
+let app: PIXI.Application;
 
 // Sprite storage
-const sprites = {};
+let sprites: SpriteContainer = {};
 
 // Text elements
-const texts = {};
+let texts: TextContainer = {};
 
 // Graphics
-const graphics = {};
+let graphics: GraphicsContainer = {};
 
 // Backup camera
 const video = document.querySelector("#videoElement");
 
 // STOMP client
-let stompClient;
+let stompClient: any;
 
 // Clock value
 let clock = "0:00 AM";
 
 // XHTTP
 const xhttp = new XMLHttpRequest();
-
-// Keyboard bindings
-const keyUp = keyboard("ArrowUp");
-let keyUpState = false;
-const keyDown = keyboard("ArrowDown");
-let keyDownState = false;
-const keyI = keyboard("i")
-let keyIState = false;
-const keyB = keyboard("b")
-let keyBState = false;
 
 
 // App setup
@@ -82,26 +99,21 @@ function setup() {
     if (navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({video: {width: 800, height: 600}})
             .then(function (stream) {
+                // @ts-ignore
                 video.srcObject = stream;
             })
-            .catch(function (error) {
+            .catch(function () {
                 console.log("Something went wrong binding the camera!");
             });
     }
 
     // Turn on all indicators for startup sequence
-    indicators.left = true;
-    indicators.right = true;
-    indicators.lowBeam = true;
-    indicators.highBeam = true;
-    indicators.mil = true;
-    indicators.oil = true;
-    indicators.battery = true;
-    indicators.fuel = true;
+    indicators = setAllIndicators(indicators, true);
 
     // Load resources and start animations
     PIXI.Loader.shared.add('img/spritesheet.json').load(() => {
         // Get reference to sprite sheet
+        // @ts-ignore
         const sheet = PIXI.Loader.shared.resources['img/spritesheet.json'].spritesheet;
 
         sprites.centerLines = new PIXI.Sprite(sheet.textures['center_lines.png']);
@@ -109,6 +121,7 @@ function setup() {
         sprites.centerLines.position.set(640, 240);
         app.stage.addChild(sprites.centerLines);
 
+        // @ts-ignore
         sprites.backupCamera = new PIXI.Sprite(PIXI.Texture.from(video));
         sprites.backupCamera.anchor.set(0.5, 0.5);
         sprites.backupCamera.height = 323.5;
@@ -199,13 +212,17 @@ function setup() {
         sprites.oilNeedle = new PIXI.Sprite(sheet.textures['little_needle.png']);
         sprites.oilNeedle.anchor.set(6.52, 0.5);
         sprites.oilNeedle.position.set(1031, 240);
-        sprites.oilNeedle.angle = pressureToAngle(oil);
+        sprites.oilNeedle.angle = pressureToAngle(oilPressure);
         app.stage.addChild(sprites.oilNeedle);
 
         sprites.centerLogo = new PIXI.Sprite(sheet.textures['center_logo.png']);
         sprites.centerLogo.anchor.set(0.5, 0.5);
         sprites.centerLogo.position.set(640, 240);
         sprites.centerLogo.alpha = 0;
+        sprites.centerLogo.interactive = true;
+        sprites.centerLogo.on('pointerdown', () => {
+            location.href = "/status.html";
+        });
         app.stage.addChild(sprites.centerLogo);
 
         sprites.leftIndicator = new PIXI.Sprite(sheet.textures['left_indicator.png']);
@@ -324,6 +341,18 @@ function setup() {
         texts.odometer.alpha = 0.8;
         app.stage.addChild(texts.odometer);
 
+        texts.temperature = new PIXI.Text("Inside: " + Math.round(temperature) + "°", {
+            fontFamily: "Arial",
+            align: "center",
+            fontSize: 20,
+            strokeThickness: 2,
+            fill: "white"
+        });
+        texts.temperature.anchor.set(0.0, 0.5);
+        texts.temperature.position.set(400, 55);
+        texts.temperature.alpha = 0.8;
+        app.stage.addChild(texts.temperature);
+
         texts.clock = new PIXI.Text(currentTime(), {
             fontFamily: "Arial",
             align: "center",
@@ -331,12 +360,12 @@ function setup() {
             strokeThickness: 2,
             fill: "white"
         });
-        texts.clock.anchor.set(0.5, 0.5);
-        texts.clock.position.set(640, 55);
+        texts.clock.anchor.set(1, 0.5);
+        texts.clock.position.set(875, 55);
         texts.clock.alpha = 0.8;
         app.stage.addChild(texts.clock);
 
-        texts.batteryVoltage = new PIXI.Text(voltage, {
+        texts.batteryVoltage = new PIXI.Text(voltage.toString(), {
             fontFamily: "Arial",
             align: "center",
             fontSize: 15,
@@ -366,7 +395,7 @@ function initLoop() {
         fuel += 0.025;
         boost += 0.75;
         voltage += 0.375;
-        oil += 2;
+        oilPressure += 2;
 
         sprites.leftIndicator.alpha += 0.025;
         sprites.rightIndicator.alpha += 0.025;
@@ -384,7 +413,7 @@ function initLoop() {
         fuel -= 0.025;
         boost -= 0.75;
         voltage -= 0.375;
-        oil -= 2;
+        oilPressure -= 2;
 
         sprites.leftIndicator.alpha -= 0.025;
         sprites.rightIndicator.alpha -= 0.025;
@@ -424,7 +453,8 @@ function initLoop() {
         boostLaggingMax = 0;
 
         // Create websocket
-        connectWebSocket();
+        if (!SIMULATION)
+            connectWebSocket();
 
         // Start initialization loop
         app.ticker.add(mainLoop);
@@ -433,7 +463,7 @@ function initLoop() {
 
 // Main loop
 function mainLoop() {
-    if (DEBUG_MODE) debugMainLoop();
+    if (SIMULATION) simLoop();
 
     drawChangingElements();
 }
@@ -466,12 +496,12 @@ function drawChangingElements() {
     sprites.rpmNeedle.angle = rpmToAngle(rpm);
     sprites.mphNeedle.angle = mphToAngle(mph);
     sprites.coolantNeedle.angle = temperatureToAngle(coolant);
-    sprites.oilNeedle.angle = pressureToAngle(oil);
+    sprites.oilNeedle.angle = pressureToAngle(oilPressure);
     sprites.leftBoostHilite.rotation = boostToAngle(boost) + degToRad(179);
     sprites.rightFuelHilite.rotation = fuelToAngle(fuel) + degToRad(179);
     sprites.rightFuelHilite2.rotation = fuelToAngle(fuel) + degToRad(179);
 
-    if (keyBState) {
+    if (reverse) {
         sprites.centerLogo.visible = false;
         sprites.backupCamera.visible = true;
     } else {
@@ -509,6 +539,7 @@ function drawChangingElements() {
     texts.batteryVoltage.text = formatVoltage(voltage).toString();
     texts.tripOdometer.text = "Trip: " + formatOdometer(tripOdometer) + " mi";
     texts.odometer.text = formatOdometer(odometer) + " mi";
+    texts.temperature.text = "Inside: " + Math.round(temperature) + "°"
 
     if (indicators.left) {
         if (initState < 80) {
@@ -530,10 +561,10 @@ function drawChangingElements() {
         sprites.rightIndicator.visible = false;
     }
 
-    sprites.lowBeam.visible = indicators.lowBeam;
-    sprites.highBeam.visible = indicators.highBeam && indicators.lowBeam;
-    sprites.mil.visible = indicators.mil;
-    sprites.oil.visible = indicators.oil;
+    sprites.lowBeam.visible = indicators.lowBeam || false;
+    sprites.highBeam.visible = (indicators.highBeam && indicators.lowBeam) || false;
+    sprites.mil.visible = indicators.mil || false;
+    sprites.oil.visible = indicators.oil || false;
     sprites.battery.visible = voltage < 12 || voltage > 15;
     sprites.fuel.visible = fuel <= 0.25;
 
@@ -551,17 +582,16 @@ function drawChangingElements() {
 }
 
 // Maintains connection to web socket
-function connectWebSocket() {
+function connectWebSocket(this: any) {
     const socket = new SockJS('/gs-guide-websocket');
 
     stompClient = Stomp.over(socket);
-    stompClient.debug = DEBUG_MODE;
 
-    stompClient.connect({}, (frame) => {
+    stompClient.connect({}, (frame: string) => {
         console.log('Connected to: ' + frame);
 
-        stompClient.subscribe('/topic/status', (message) => {
-            const statusMsg = JSON.parse(message.body);
+        stompClient.subscribe('/topic/status', (message: StatusMessage) => {
+            const statusMsg = message.body;
 
             rpm = statusMsg.rpm;
             coolant = statusMsg.coolant;
@@ -570,19 +600,21 @@ function connectWebSocket() {
             fuel = statusMsg.fuel;
             voltage = statusMsg.voltage;
             odometer = statusMsg.odometer;
+            temperature = statusMsg.temperature;
             tripOdometer = statusMsg.tripOdometer;
             reverse = statusMsg.reverse;
+            oilPressure = statusMsg.oilPressure;
 
             indicators.mil = statusMsg.mil;
-            indicators.oil = statusMsg.oil;
+            indicators.oil = statusMsg.oilPressure < 10;
             indicators.lowBeam = statusMsg.lowBeam;
             indicators.highBeam = statusMsg.highBeam;
             indicators.left = statusMsg.left;
             indicators.right = statusMsg.right;
         });
 
-        stompClient.subscribe('/topic/logs', (message) => {
-            const logMessages = JSON.parse(message.body);
+        stompClient.subscribe('/topic/logs', (message: LogMessage) => {
+            const logMessages = message.body;
 
             if (logMessages.length !== 0) {
                 console.log(logMessages);
@@ -590,7 +622,7 @@ function connectWebSocket() {
         });
     }, () => {
         // Attempt to reconnect on lost connection
-        window.setTimeout(function() {
+        window.setTimeout(function(this: any) {
             this.connectWebSocket();
         }.bind(this), 2500);
     });
@@ -599,106 +631,6 @@ function connectWebSocket() {
 // START THE DISPLAY!
 setup();
 
-function debugMainLoop() {
-    // Update needles from keyboard
-    if (keyUpState) {
-        mph += 1;
-        rpm += 50;
-        boost += 0.1875;
-        coolant += 0.625;
-        fuel += 0.00625;
-        voltage += 0.09375;
-        oil += 0.5;
+function simLoop() {
 
-        if (mph > MAX_MPH)
-            mph = MAX_MPH;
-
-        if (rpm > MAX_RPM)
-            rpm = MAX_RPM;
-
-        if (boost > MAX_BOOST)
-            boost = MAX_BOOST;
-
-        if (coolant > 270.0)
-            coolant = 270.0;
-
-        if (fuel > 1)
-            fuel = 1;
-
-        if (voltage > 15)
-            voltage = 15;
-
-        if (oil > 90)
-            oil = 90;
-    }
-
-    if (keyDownState) {
-        mph -= 1;
-        rpm -= 50;
-        boost -= 0.1875;
-        coolant -= 0.625;
-        fuel -= 0.00625;
-        voltage -= 0.09375;
-        oil -= 0.5;
-
-        if (mph < 0)
-            mph = 0;
-
-        if (rpm < 0)
-            rpm = 0;
-
-        if (boost < 0)
-            boost = 0;
-
-        if (coolant < 0)
-            coolant = 0;
-
-        if (fuel < 0)
-            fuel = 0;
-
-        if (voltage < 0)
-            voltage = 0;
-
-        if (oil < 10)
-            oil = 10;
-    }
-}
-
-// Only operates in debug mode
-if (DEBUG_MODE) {
-    keyUp.press = () => {
-        keyUpState = true;
-    };
-
-    keyUp.release = () => {
-        keyUpState = false;
-    };
-
-    keyDown.press = () => {
-        keyDownState = true;
-    };
-
-    keyDown.release = () => {
-        keyDownState = false;
-    };
-
-    keyI.press = () => {
-        keyIState = true;
-
-        indicators = setAllIndicators(indicators, true);
-    };
-
-    keyI.release = () => {
-        keyIState = false;
-
-        indicators = setAllIndicators(indicators, false);
-    };
-
-    keyB.press = () => {
-        keyBState = true;
-    };
-
-    keyB.release = () => {
-        keyBState = false;
-    };
 }

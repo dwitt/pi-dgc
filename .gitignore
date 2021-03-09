@@ -25,3 +25,5 @@ hs_err_pid*
 /.gradle/
 /build/
 /.idea/
+/src/main/resources/static/lib/bundle.js
+/node_modules/

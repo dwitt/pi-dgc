@@ -34,10 +34,13 @@ object State {
     val mph: Mph<Double> = Mph(Config.speedodometerSmoothing)
 
     @set:Synchronized @get:Synchronized
-    var oil: Boolean = false
+    var oilPressure: Double = 0.0
 
     @set:Synchronized @get:Synchronized
     var odometer: Double = 0.0
+
+    @set:Synchronized @get:Synchronized
+    var barometricPressure: Double = 0.0
 
     @set:Synchronized @get:Synchronized
     var reverse: Boolean = false
@@ -47,6 +50,9 @@ object State {
 
     @set:Synchronized @get:Synchronized
     var rpm: Int = 0
+
+    @set:Synchronized @get:Synchronized
+    var temperature: Double = 0.0
 
     @set:Synchronized @get:Synchronized
     var tripOdometer: Double = 0.0

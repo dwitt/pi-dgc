@@ -8,7 +8,7 @@ data class StatusMessage(
     val coolant: Int,           // OBD2
     val fuel: Double,           // Serial
     val mil: Boolean,           // OBD2
-    val oil: Boolean,           // OBD2
+    val oilPressure: Double,    // OBD2
     val lowBeam: Boolean,       // Serial
     val highBeam: Boolean,      // Serial
     val left: Boolean,          // Serial
@@ -16,5 +16,6 @@ data class StatusMessage(
     val right: Boolean,         // Serial
     val voltage: Double,        // OBD2
     val odometer: Double,       // Serial + Config
+    val temperature: Double,    // Serial + Config
     val tripOdometer: Double    // Serial + Config
 )

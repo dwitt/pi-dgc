@@ -43,9 +43,19 @@ class CanbusManager: Runnable {
                     it.write(makeCanRequest(0x05))
                     readResponse(it)
 
+                    // Request Barometric Pressure
+                    it.write(makeCanRequest(0x33))
+                    readResponse(it)
+
+                    // Request MAP
+                    it.write(makeCanRequest(0x0B))
+                    readResponse(it)
+
                     // Request MIL status
                     it.write(makeCanRequest(0x01))
                     readResponse(it)
+
+                    // TODO: request oil pressure
 
                     lastLowRes = currentTime
                 }
@@ -98,7 +108,17 @@ class CanbusManager: Runnable {
                     return
                 }
 
-                State.coolant = (((data[3].toUByte().toInt().toFloat() - 40.0) * 1.8) + 32.0).toInt()
+                State.coolant = (((data[3].toUByte().toInt().toDouble() - 40.0) * 1.8) + 32.0).toInt()
+            }
+
+            // MAP
+            0x0B -> {
+                if (length != 3) {
+                    logger.error("MAP message length != 3")
+                    return
+                }
+
+                State.boost = (data[3].toUByte().toInt().toDouble() * 0.145038) - State.barometricPressure;
             }
 
             // MIL
@@ -119,6 +139,20 @@ class CanbusManager: Runnable {
                 }
 
                 State.battery = (((256.0 * data[3].toUByte().toDouble()) + data[4].toUByte().toDouble()) / 1000.0) * Config.batteryCorrection
+            }
+
+
+            // Barometric pressure
+            0x33 -> {
+                logger.info(length.toString())
+
+                State.barometricPressure = data[3].toUByte().toInt().toDouble() * 0.145038
+            }
+
+            // Oil pressure
+            // TODO: Real bus value and logic here
+            0x00 -> {
+                State.oilPressure = data[3].toUByte().toDouble() * 0.145038
             }
         }
     }

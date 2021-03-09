@@ -1,9 +1,9 @@
 package sh.ellis.pidgc.websocket
 
 import mu.KotlinLogging
-import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.messaging.simp.SimpMessagingTemplate
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import sh.ellis.pidgc.model.StatusMessage
 import sh.ellis.pidgc.state.State
@@ -16,15 +16,8 @@ class Websocket {
     @Autowired
     private val template: SimpMessagingTemplate? = null
 
-    private var logX: Int = 0
-
     @Scheduled(fixedRate = 50)
     fun sendStatus() {
-
-        if (logX % 50 == 0)
-            logger.info("Sending status...")
-        logX++;
-
         template?.convertAndSend("/topic/status",
             StatusMessage(
                 mph = State.mph.getAverage(),
@@ -33,7 +26,7 @@ class Websocket {
                 coolant = State.coolant,
                 fuel = State.fuel,
                 mil = State.mil,
-                oil = State.oil,
+                oilPressure = State.oilPressure,
                 lowBeam = State.lowBeam,
                 highBeam = State.highBeam,
                 left = State.left,
@@ -41,6 +34,7 @@ class Websocket {
                 reverse = State.reverse,
                 voltage = State.battery,
                 odometer = State.odometer,
+                temperature = State.temperature,
                 tripOdometer = State.tripOdometer
             ))
     }

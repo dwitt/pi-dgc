@@ -1,5 +1,7 @@
 package sh.ellis.pidgc.utils
 
+import kotlin.system.exitProcess
+
 fun isWindows(): Boolean {
     val os = System.getProperty("os.name").toLowerCase()
 
@@ -10,6 +12,6 @@ fun isWindows(): Boolean {
 }
 
 fun shutdownSystem() {
-    val p = Runtime.getRuntime().exec("sudo shutdown -h now")
-    p.waitFor()
+    Runtime.getRuntime().exec("sudo shutdown -h now")
+    exitProcess(0)
 }

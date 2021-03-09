@@ -14,6 +14,8 @@ object Config {
     var currentTripOdometer: Double = 0.0
     var speedodometerSmoothing: Int = 10
     var vssPulsesPerMile: Int = 8000
+    var tempCompensation = -5.0
+    var pressureCompensation = 0.579153
 
     init {
         vssPulsesPerMile = ini.get("vss", "pulses_per_mile", Int::class.javaPrimitiveType)
@@ -21,6 +23,8 @@ object Config {
         batteryMax = ini.get("battery", "max_voltage", Double::class.javaPrimitiveType)
         batteryCorrection = ini.get("battery", "correction", Double::class.javaPrimitiveType)
         speedodometerSmoothing = ini.get("speedometer", "smoothing", Int::class.javaPrimitiveType)
+        tempCompensation = ini.get("BMP180", "tempCompensation", Double::class.javaPrimitiveType)
+        pressureCompensation = ini.get("BMP180", "pressureCompensation", Double::class.javaPrimitiveType)
 
         // Initialize odometer values
         State.odometer = ini.get("odometer", "current", Double::class.javaPrimitiveType)

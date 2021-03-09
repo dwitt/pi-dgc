@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pi-DGC by Josh Ellis / josh@ellis.sh</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: Arial;
+            color: white;
+        }
+        label {
+            font-size: 25px;
+        }
+        input {
+            color: black;
+            font-size: 25px;
+            width: 125px;
+        }
+        table {
+            width: 100%;
+        }
+        body {
+            background-color: black;
+        }
+    </style>
+
+    <script src="js/libs/sockjs.min.js"></script>
+    <script src="js/libs/stomp.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript" src="js/utils.ts"></script>
+    <script type="text/javascript" src="js/keyboard.js"></script>
+    <script type="text/javascript" src="js/status.js"></script>
+
+    <div style="width:1280px;height:480px">
+        <h1>Diagnostics</h1>
+        <table>
+            <tr>
+                <td><label for="rpm">RPM</label>: <input type="text" id="rpm" readonly value="0" /></td>
+                <td><label for="coolant">Coolant</label>: <input type="text" id="coolant" readonly value="0" /></td>
+                <td><label for="boost">Boost</label>: <input type="text" id="boost" readonly value="0" /></td>
+            </tr>
+            <tr>
+                <td><label for="mph">MPH</label>: <input type="text" id="mph" readonly value="0" /></td>
+                <td><label for="fuel">Fuel</label>: <input type="text" id="fuel" readonly value="0" /></td>
+                <td><label for="voltage">Voltage</label>: <input type="text" id="voltage" readonly value="0" /></td>
+            </tr>
+            <tr>
+                <td><label for="odometer">Odometer</label>: <input type="text" id="odometer" readonly value="0" /></td>
+                <td><label for="temperature">Temperature</label>: <input type="text" id="temperature" readonly value="0" /></td>
+                <td><label for="trip-odometer">Trip Odometer</label>: <input type="text" id="trip-odometer" readonly value="0" /></td>
+            </tr>
+            <tr>
+                <td><label for="reverse">Reverse Ind.</label>: <input type="text" id="reverse" readonly value="0" /></td>
+                <td><label for="mil">MIL Ind.</label>: <input type="text" id="mil" readonly value="0" /></td>
+                <td><label for="oilIndicator">Oil Ind.</label>: <input type="text" id="oilIndicator" readonly value="0" /></td>
+            </tr>
+            <tr>
+                <td><label for="low">Lowbeam Ind.</label>: <input type="text" id="low" readonly value="0" /></td>
+                <td><label for="high">Highbeam Ind.</label>: <input type="text" id="high" readonly value="0" /></td>
+                <td><label for="left">Left Ind.</label>: <input type="text" id="left" readonly value="0" /></td>
+            </tr>
+            <tr>
+                <td><label for="right">Right Ind.</label>: <input type="text" id="right" readonly value="0" /></td>
+                <td><label for="oilPressure">Oil Pressure</label>: <input type="text" id="oilPressure" readonly value="0" /></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <textarea style="width: 100%;height:100px" id=logs">
+
+                    </textarea>
+                </td>
+            </tr>
+        </table>
+        <button onclick="window.location.href='/'" style="color:black">Back</button>
+    </div>
+</body>
+</html>
