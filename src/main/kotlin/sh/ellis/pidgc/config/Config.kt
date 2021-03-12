@@ -7,7 +7,6 @@ import java.io.File
 object Config {
     private val ini = Wini(File("./config.ini"))
 
-    var batteryCorrection: Double = 1.49
     var batteryMin: Double = 12.0
     var batteryMax: Double = 15.0
     var currentOdometer: Double = 0.0
@@ -21,7 +20,6 @@ object Config {
         vssPulsesPerMile = ini.get("vss", "pulses_per_mile", Int::class.javaPrimitiveType)
         batteryMin = ini.get("battery", "min_voltage", Double::class.javaPrimitiveType)
         batteryMax = ini.get("battery", "max_voltage", Double::class.javaPrimitiveType)
-        batteryCorrection = ini.get("battery", "correction", Double::class.javaPrimitiveType)
         speedodometerSmoothing = ini.get("speedometer", "smoothing", Int::class.javaPrimitiveType)
         tempCompensation = ini.get("BMP180", "tempCompensation", Double::class.javaPrimitiveType)
         pressureCompensation = ini.get("BMP180", "pressureCompensation", Double::class.javaPrimitiveType)

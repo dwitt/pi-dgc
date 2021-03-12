@@ -12,4 +12,3 @@
 // A11 not yet used
 // A12 not yet used
 // A13 not yet used
-#define PI_PWR  12  // Pi power relay

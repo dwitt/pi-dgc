@@ -13,6 +13,7 @@ import {
     LogMessage,
     SpriteContainer,
     StatusMessage,
+    StatusMessageBody,
     TextContainer,
     VehicleParameters
 } from "./types";
@@ -28,7 +29,7 @@ import { startSimulation } from "./simulation";
 
 
 // Constant definitions
-export const SIMULATION = true;
+export const SIMULATION = false;
 export const MAX_RPM = 8000.0;
 export const MAX_MPH = 160.0;
 export const MAX_BOOST = 30.0;
@@ -602,14 +603,25 @@ function connectWebSocket(this: any) {
     const socket = new SockJS('/gs-guide-websocket');
 
     stompClient = Stomp.over(socket);
+    stompClient.debug = () => {};
 
     stompClient.connect({}, (frame: string) => {
         console.log('Connected to: ' + frame);
 
         stompClient.subscribe('/topic/status', (message: StatusMessage) => {
-            const statusMsg = message.body;
+            const statusMsg = JSON.parse(message.body + "");
 
-            vehicle = statusMsg;
+            vehicle.rpm = statusMsg.rpm;
+            vehicle.mph = statusMsg.mph;
+            vehicle.coolant = statusMsg.coolant;
+            vehicle.fuel = statusMsg.fuel;
+            vehicle.boost = statusMsg.boost;
+            vehicle.voltage = statusMsg.voltage;
+            vehicle.odometer = statusMsg.odometer;
+            vehicle.tripOdometer = statusMsg.tripOdometer;
+            vehicle.reverse = statusMsg.reverse;
+            vehicle.temperature = statusMsg.temperature;
+            vehicle.oilPressure = statusMsg.oilPressure;
 
             indicators.mil = statusMsg.mil;
             indicators.oil = statusMsg.oilPressure < 10;

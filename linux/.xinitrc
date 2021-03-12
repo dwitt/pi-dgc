@@ -1,6 +1,6 @@
 #!/bin/sh
 # ~/.xinitrc
-xrandr --output HDMI-1 --mode 1280x720
+xrandr --output HDMI-1 --mode 1280x480
 
 xset -dpms
 xset s off

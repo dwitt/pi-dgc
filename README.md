@@ -8,6 +8,7 @@ Setup steps on Buster Lite:
 - `sudo apt-get install --no-install-recommends chromium-browser`
 - `sudo apt-get install unclutter`
 - `sudo apt-get install default-jdk`
+- Follow all steps on http://skpang.co.uk/catalog/images/raspberrypi/pican/PICAN3_UGA_10.pdf to setup/enable the PiCAN3
 - `mkdir ~/pidgc`
 - Put pidgc.jar into ~/pidgc
 - Edit `/boot/config.txt`. Add:
@@ -15,11 +16,6 @@ Setup steps on Buster Lite:
 initial_turbo=60
 disable_splash=1
 boot_delay=0
-dtparam=spi=on
-dtoverlay=mcp2515-can0,oscillator=16000000,interrupt=25
-dtoverlay=spi-bcm2835-overlay
-dtparam=i2c_arm=on
-dtoverlay=i2c-rtc,pcf8523
 ~~~
 - Add `quiet fastboot` to `/boot/cmdline.txt`
 - Add contents of `linux/network_interfaces` from repo into file `/etc/network/interfaces`

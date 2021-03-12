@@ -1,7 +1,6 @@
 package sh.ellis.pidgc.canbus
 
 import mu.KotlinLogging
-import sh.ellis.pidgc.config.Config
 import sh.ellis.pidgc.state.State
 import tel.schich.javacan.*
 import java.nio.ByteBuffer
@@ -17,8 +16,7 @@ class CanbusManager: Runnable {
         CanChannels.newRawChannel().use {
             it.bind(NetworkDevice.lookup("can0"))
             it.configureBlocking(true)
-            it.setOption(CanSocketOptions.FILTER, arrayOf( CanFilter(0x7E8)))
-            it.setOption(CanSocketOptions.SO_RCVTIMEO, Duration.ofMillis(1))
+            it.setOption(CanSocketOptions.SO_RCVTIMEO, Duration.ofMillis(2))
 
             var lastHiRes: Long = System.currentTimeMillis()
             var lastLowRes = lastHiRes
@@ -28,17 +26,13 @@ class CanbusManager: Runnable {
 
                 if (currentTime - lastHiRes >= 50) {
                     // Request engine RPM
-                    // it.write(makeCanRequest(0x0C))
-                    // readResponse(it)
+                     it.write(makeCanRequest(0x0C))
+                     readResponse(it)
 
                     lastHiRes = currentTime
                 }
 
                 if (currentTime - lastLowRes >= 500) {
-                    // Request control module voltage
-                    it.write(makeCanRequest(0x42))
-                    readResponse(it)
-
                     // Request coolant temp
                     it.write(makeCanRequest(0x05))
                     readResponse(it)
@@ -54,8 +48,6 @@ class CanbusManager: Runnable {
                     // Request MIL status
                     it.write(makeCanRequest(0x01))
                     readResponse(it)
-
-                    // TODO: request oil pressure
 
                     lastLowRes = currentTime
                 }
@@ -84,76 +76,61 @@ class CanbusManager: Runnable {
         // Get message length
         val length: Int = data[0].toInt()
 
-        // Verify mode
-        if (data[1].toInt() != 0x41)
-            return
+        // Handle mode 41
+        if (frame.id == 0x7E8 && data[1].toInt() == 0x41) {
+            // Handle response PID
+            when (data[2].toInt()) {
 
-        // Handle response PID
-        when (data[2].toInt()) {
+                // RPM
+                0x0C -> {
+                    if (length != 4) {
+                        logger.error("RPM message length != 4")
+                        return
+                    }
 
-            // RPM
-            0x0C -> {
-                if (length != 4) {
-                    logger.error("RPM message length != 4")
-                    return
+                    State.rpm = ((256 * data[3].toUByte().toInt()) + data[4].toUByte().toInt()) / 4
                 }
 
-                State.rpm = ((256 * data[3].toUByte().toInt()) + data[4].toUByte().toInt()) / 4
-            }
+                // Coolant
+                0x05 -> {
+                    if (length != 3) {
+                        logger.error("Coolant message length != 3")
+                        return
+                    }
 
-            // Coolant
-            0x05 -> {
-                if (length != 3) {
-                    logger.error("Coolant message length != 3")
-                    return
+                    State.coolant = (((data[3].toUByte().toInt().toDouble() - 40.0) * 1.8) + 32.0).toInt()
                 }
 
-                State.coolant = (((data[3].toUByte().toInt().toDouble() - 40.0) * 1.8) + 32.0).toInt()
-            }
+                // MAP
+                0x0B -> {
+                    if (length != 3) {
+                        logger.error("MAP message length != 3")
+                        return
+                    }
 
-            // MAP
-            0x0B -> {
-                if (length != 3) {
-                    logger.error("MAP message length != 3")
-                    return
+                    State.boost = (data[3].toUByte().toInt().toDouble() * 0.145038) - State.barometricPressure;
                 }
 
-                State.boost = (data[3].toUByte().toInt().toDouble() * 0.145038) - State.barometricPressure;
-            }
+                // MIL
+                0x01 -> {
+                    if (length != 6) {
+                        logger.error("MIL message length != 6: $length")
+                        return
+                    }
 
-            // MIL
-            0x01 -> {
-                if (length != 6) {
-                    logger.error("MIL message length != 6: $length")
-                    return
+                    State.mil = data[3].toUByte().msb.toUInt() == (0xF).toUInt()
                 }
 
-                State.mil = data[3].toUByte().msb.toUInt() == (0xF).toUInt()
-            }
-
-            // Control Module Voltage
-            0x42 -> {
-                if (length != 4) {
-                    logger.error("Control Module Voltage message length != 4")
-                    return
+                // Barometric pressure
+                0x33 -> {
+                    State.barometricPressure = data[3].toUByte().toInt().toDouble() * 0.145038
                 }
-
-                State.battery = (((256.0 * data[3].toUByte().toDouble()) + data[4].toUByte().toDouble()) / 1000.0) * Config.batteryCorrection
             }
-
-
-            // Barometric pressure
-            0x33 -> {
-                logger.info(length.toString())
-
-                State.barometricPressure = data[3].toUByte().toInt().toDouble() * 0.145038
-            }
+        } else if (frame.id == 0x18FEEF00) {
+            // Engine Fluid Level/Pressure 1
 
             // Oil pressure
-            // TODO: Real bus value and logic here
-            0x00 -> {
-                State.oilPressure = data[3].toUByte().toDouble() * 0.145038
-            }
+            State.oilPressure = data[3].toUByte().toDouble() * 4.0 * 0.145038
         }
     }
 

@@ -2,7 +2,7 @@
 
 // Reads battery voltage (0-15)
 float readBattery() {
-  return ((float)analogRead(IGNI) / 1024.0) * 15.0;
+  return ((float)analogRead(IGNI) / 1024.0) * 18.45; // 18.45 multiplier determined experimentally
 }
 
 int readHighBeam() {

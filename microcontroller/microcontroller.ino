@@ -3,18 +3,23 @@
 #include <Smoothed.h>
 #include <BMP085.h>
 #include <Wire.h>
+#include <EEPROM.h>
 #include "readers.h"
 #include "pins.h"
+#include "types.h"
+#include "eepromHelper.h"
 
-#define LO_FREQ   15000000
-#define MD_FREQ   250000
-#define HI_FREQ   100000
+#define LO_FREQ   999999999 // 15000000
+#define MD_FREQ   999999999 // 250000
+#define HI_FREQ   999999999 // 100000
 #define NO_PULSE  99999
+
+#define ODOMETER_ADDRESS  0
+#define TRIP_ADDRESS      540
 
 elapsedMicros lowFrequency;
 elapsedMicros mediumFrequency;
 elapsedMicros highFrequency;
-elapsedMillis piShutdownTimer;
 
 bool startedShutdown = false;
 
@@ -30,13 +35,19 @@ volatile unsigned long lastPulse = 0;
 volatile unsigned long pulseSeparation = 0;
 volatile unsigned int pulseCounter = 0;
 
+Mileage odometer;
+Mileage tripOdometer;
+
 BMP085 ptSensor;
 
 void setup() {
   Serial.begin(115200);
-  
-  pinMode(PI_PWR, OUTPUT);
 
+  // Turn on LED as a power indicator
+  pinMode(13, OUTPUT);
+  digitalWrite(13, HIGH);
+
+  // Set value to expiration so it will fire immediately on boot
   lowFrequency = LO_FREQ;
 
   battery.begin(SMOOTHED_AVERAGE, 10);
@@ -71,7 +82,7 @@ void loop() {
   // Poll analog pins
   readAnalog();
 
-  // Send Serial updates if necessary
+  // High frequency updates
   if (highFrequency >= HI_FREQ) {
     highFrequency -= HI_FREQ;
 
@@ -87,6 +98,7 @@ void loop() {
     Serial.println(output);
   }
 
+  // Medium frequency updates
   if (mediumFrequency >= MD_FREQ) {
     mediumFrequency -= MD_FREQ;
 
@@ -105,6 +117,7 @@ void loop() {
     Serial.print(output);
   }
 
+  // Low frequency updates
   if (lowFrequency >= LO_FREQ) {
     lowFrequency -= LO_FREQ;
 
@@ -119,19 +132,13 @@ void loop() {
     Serial.print(output);
   }
 
-  // If the battery voltage is less than 5vdc, we assume we should shut down
-  if (battery.get() < 5.0) {
+  // If the battery voltage is less than 11vdc, best effort to save state to EEPROM
+  if (battery.get() < 11.0) {
     if (!startedShutdown) {
       // Start the shutdown sequence
       startedShutdown = true;
-      piShutdownTimer = 0;
-      Serial.println("shutdown:true");
-    } else {
-      if (piShutdownTimer >= 120000) {
-        // Open relay and kill power to Pi
-        digitalWrite(PI_PWR, LOW);
-        piShutdownTimer = 120001;
-      }
+      writeMileage(ODOMETER_ADDRESS, &odometer);
+      writeMileage(TRIP_ADDRESS, &tripOdometer);
     }
   }
 }

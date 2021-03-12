@@ -57,7 +57,7 @@ export interface GraphicsContainer {
     leftGaugeBoostBlackout?: PIXI.Graphics;
 }
 
-interface StatusMessageBody {
+export interface StatusMessageBody {
     mph: number;            // Serial
     rpm: number;               // OBD2
     boost: number;          // OBD2
