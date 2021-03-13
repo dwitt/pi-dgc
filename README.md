@@ -9,6 +9,7 @@ Setup steps on Buster Lite:
 - `sudo apt-get install unclutter`
 - `sudo apt-get install default-jdk`
 - Follow all steps on http://skpang.co.uk/catalog/images/raspberrypi/pican/PICAN3_UGA_10.pdf to setup/enable the PiCAN3
+- Follow instructions on https://www.raspberrypi.org/forums/viewtopic.php?t=24679#p227301 to set the proper resolution
 - `mkdir ~/pidgc`
 - Put pidgc.jar into ~/pidgc
 - Edit `/boot/config.txt`. Add:

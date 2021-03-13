@@ -26,14 +26,9 @@
             background-color: black;
         }
     </style>
-
-    <script src="js/libs/sockjs.min.js"></script>
-    <script src="js/libs/stomp.min.js"></script>
 </head>
 <body>
-    <script type="text/javascript" src="js/utils.ts"></script>
-    <script type="text/javascript" src="js/keyboard.js"></script>
-    <script type="text/javascript" src="js/status.js"></script>
+    <script type="text/javascript" src="lib/status.js"></script>
 
     <div style="width:1280px;height:480px">
         <h1>Diagnostics</h1>
@@ -56,7 +51,7 @@
             <tr>
                 <td><label for="reverse">Reverse Ind.</label>: <input type="text" id="reverse" readonly value="0" /></td>
                 <td><label for="mil">MIL Ind.</label>: <input type="text" id="mil" readonly value="0" /></td>
-                <td><label for="oilIndicator">Oil Ind.</label>: <input type="text" id="oilIndicator" readonly value="0" /></td>
+                <td><label for="oilPressure">Oil Pressure</label>: <input type="text" id="oilPressure" readonly value="0" /></td>
             </tr>
             <tr>
                 <td><label for="low">Lowbeam Ind.</label>: <input type="text" id="low" readonly value="0" /></td>
@@ -65,14 +60,12 @@
             </tr>
             <tr>
                 <td><label for="right">Right Ind.</label>: <input type="text" id="right" readonly value="0" /></td>
-                <td><label for="oilPressure">Oil Pressure</label>: <input type="text" id="oilPressure" readonly value="0" /></td>
+                <td></td>
                 <td></td>
             </tr>
             <tr>
                 <td colspan="3">
-                    <textarea style="width: 100%;height:100px" id=logs">
-
-                    </textarea>
+                    <textarea style="width: 100%;height:100px" id=logs"></textarea>
                 </td>
             </tr>
         </table>

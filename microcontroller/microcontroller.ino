@@ -3,19 +3,16 @@
 #include <Smoothed.h>
 #include <BMP085.h>
 #include <Wire.h>
-#include <EEPROM.h>
 #include "readers.h"
 #include "pins.h"
 #include "types.h"
-#include "eepromHelper.h"
+#include "odometer.h"
+#include "serialReader.h"
 
 #define LO_FREQ   999999999 // 15000000
 #define MD_FREQ   999999999 // 250000
 #define HI_FREQ   999999999 // 100000
 #define NO_PULSE  99999
-
-#define ODOMETER_ADDRESS  0
-#define TRIP_ADDRESS      540
 
 elapsedMicros lowFrequency;
 elapsedMicros mediumFrequency;
@@ -34,9 +31,6 @@ Smoothed<float> fuelLevel;
 volatile unsigned long lastPulse = 0;
 volatile unsigned long pulseSeparation = 0;
 volatile unsigned int pulseCounter = 0;
-
-Mileage odometer;
-Mileage tripOdometer;
 
 BMP085 ptSensor;
 
@@ -62,6 +56,9 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(VSS), vssInterrupt, RISING);
 
   ptSensor.init();
+
+  // Send initial odometer values
+  sendOdometerValues();
 }
 
 void vssInterrupt() {
@@ -78,7 +75,7 @@ void vssInterrupt() {
   pulseCounter++;
 }
 
-void loop() {
+void loop() {  
   // Poll analog pins
   readAnalog();
 
@@ -132,14 +129,29 @@ void loop() {
     Serial.print(output);
   }
 
-  // If the battery voltage is less than 11vdc, best effort to save state to EEPROM
-  if (battery.get() < 11.0) {
-    if (!startedShutdown) {
-      // Start the shutdown sequence
-      startedShutdown = true;
-      writeMileage(ODOMETER_ADDRESS, &odometer);
-      writeMileage(TRIP_ADDRESS, &tripOdometer);
+  // Check for commands from Pi
+  char *serialMessage = getSerialMessage();
+  if (serialMessage != NULL) {
+    // Pi requesting odometer values
+    if (strcmp(serialMessage, "so") == 0)
+      sendOdometerValues();
+
+    // Pi writing odometer values
+    else if(strstr(serialMessage, "wo:") != NULL) {
+      char *values = serialMessage + 3;
+
+      char *token = strtok(values, ",");
+      writeMileage(TRIP, atof(token));
+
+      token = strtok(NULL, ",");
+      writeMileage(REGULAR, atof(token));
     }
+  }
+
+  // Only write odometers to EEPROM if battery voltage is good to prevent corruption
+  if (battery.get() > 5.0) {
+    writeMileage(REGULAR, odometer);
+    writeMileage(TRIP, tripOdometer); 
   }
 }
 
