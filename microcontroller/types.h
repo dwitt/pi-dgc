@@ -3,4 +3,6 @@
 
 enum OdoType { REGULAR, TRIP };
 
+enum State { WAIT_SYNC, RUNNING };
+
 #endif

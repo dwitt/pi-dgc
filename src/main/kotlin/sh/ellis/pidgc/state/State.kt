@@ -37,6 +37,9 @@ object State {
     var oilPressure: Double = 0.0
 
     @set:Synchronized @get:Synchronized
+    var lastSavedOdometer: Double = 0.0
+
+    @set:Synchronized @get:Synchronized
     var odometer: Double = 0.0
 
     @set:Synchronized @get:Synchronized
@@ -53,6 +56,9 @@ object State {
 
     @set:Synchronized @get:Synchronized
     var temperature: Double = 0.0
+
+    @set:Synchronized @get:Synchronized
+    var lastSavedTripOdometer: Double = 0.0
 
     @set:Synchronized @get:Synchronized
     var tripOdometer: Double = 0.0

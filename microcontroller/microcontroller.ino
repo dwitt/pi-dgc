@@ -9,9 +9,9 @@
 #include "odometer.h"
 #include "serialReader.h"
 
-#define LO_FREQ   999999999 // 15000000
-#define MD_FREQ   999999999 // 250000
-#define HI_FREQ   999999999 // 100000
+#define LO_FREQ   15000000  // 15000000
+#define MD_FREQ   250000    // 250000
+#define HI_FREQ   100000    // 100000
 #define NO_PULSE  99999
 
 elapsedMicros lowFrequency;
@@ -56,9 +56,6 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(VSS), vssInterrupt, RISING);
 
   ptSensor.init();
-
-  // Send initial odometer values
-  sendOdometerValues();
 }
 
 void vssInterrupt() {
@@ -75,7 +72,26 @@ void vssInterrupt() {
   pulseCounter++;
 }
 
-void loop() {  
+void loop() {
+  // Check for commands from Pi
+  char *serialMessage = getSerialMessage();
+  if (serialMessage != NULL) {
+    // Pi requesting odometer values  
+    if (strcmp(serialMessage, "so") == 0)
+      sendOdometerValues();
+
+    // Pi writing odometer values
+    else if(strstr(serialMessage, "wo:") != NULL) {
+      char *values = serialMessage + 3;
+
+      char *token = strtok(values, ",");
+      writeMileage(TRIP, atof(token));
+
+      token = strtok(NULL, ",");
+      writeMileage(REGULAR, atof(token));
+    }
+  }
+
   // Poll analog pins
   readAnalog();
 
@@ -129,27 +145,8 @@ void loop() {
     Serial.print(output);
   }
 
-  // Check for commands from Pi
-  char *serialMessage = getSerialMessage();
-  if (serialMessage != NULL) {
-    // Pi requesting odometer values
-    if (strcmp(serialMessage, "so") == 0)
-      sendOdometerValues();
-
-    // Pi writing odometer values
-    else if(strstr(serialMessage, "wo:") != NULL) {
-      char *values = serialMessage + 3;
-
-      char *token = strtok(values, ",");
-      writeMileage(TRIP, atof(token));
-
-      token = strtok(NULL, ",");
-      writeMileage(REGULAR, atof(token));
-    }
-  }
-
-  // Only write odometers to EEPROM if battery voltage is good to prevent corruption
-  if (battery.get() > 5.0) {
+  // Only write odometers to EEPROM if battery voltage is good to prevent potential corruption
+  if (battery.get() > 1.0) {
     writeMileage(REGULAR, odometer);
     writeMileage(TRIP, tripOdometer); 
   }

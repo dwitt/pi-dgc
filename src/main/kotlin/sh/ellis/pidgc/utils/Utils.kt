@@ -1,7 +1,5 @@
 package sh.ellis.pidgc.utils
 
-import kotlin.system.exitProcess
-
 fun isWindows(): Boolean {
     val os = System.getProperty("os.name").toLowerCase()
 
@@ -11,7 +9,10 @@ fun isWindows(): Boolean {
     }
 }
 
-fun shutdownSystem() {
-    Runtime.getRuntime().exec("sudo shutdown -h now")
-    exitProcess(0)
+// This has got to be the most inefficient way of doing this :)
+fun Double.equalsToTenths(other: Double): Boolean {
+    val thisStr = String.format("%.1f", this)
+    val otherStr = String.format("%.1f", this)
+
+    return thisStr == otherStr
 }
