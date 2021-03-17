@@ -73,7 +73,8 @@ export interface StatusMessageBody {
     voltage: number;        // OBD2
     odometer: number;       // Serial + Config
     temperature: number;    // Serial + Config
-    tripOdometer: number;    // Serial + Config
+    totalPulses: number;    // Serial
+    tripOdometer: number;   // Serial + Config
 }
 
 export interface StatusMessage {

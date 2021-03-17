@@ -30,7 +30,7 @@
 <body>
     <script type="text/javascript" src="lib/status.js"></script>
 
-    <div style="width:1280px;height:480px">
+    <div style="width:1280px;height:480px;border: solid 1px white">
         <h1>Diagnostics</h1>
         <table>
             <tr>
@@ -60,11 +60,16 @@
             </tr>
             <tr>
                 <td><label for="right">Right Ind.</label>: <input type="text" id="right" readonly value="0" /></td>
-                <td></td>
+                <td>
+                    <label for="pulseCounter">Pulse Counter</label>: <input type="text" id="pulseCounter" value="0" />
+                    <button onclick="window.pidgc.zeroPulseCounter()" style="color:black">Zero</button>
+                    <button onclick="window.pidgc.saveVssPpm()" style="color:black">Save to VSS PPM</button>
+                </td>
                 <td></td>
             </tr>
             <tr>
                 <td colspan="3">
+                    Logs:<br />
                     <textarea style="width: 100%;height:100px" id=logs"></textarea>
                 </td>
             </tr>

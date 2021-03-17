@@ -35,6 +35,7 @@ class Websocket {
                 voltage = State.battery,
                 odometer = State.odometer,
                 temperature = State.temperature,
+                totalPulses = State.totalPulses,
                 tripOdometer = State.tripOdometer
             ))
     }

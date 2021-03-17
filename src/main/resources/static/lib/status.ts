@@ -14,6 +14,9 @@ import {
 // STOMP client
 let stompClient: any;
 
+// XHTTP
+const xhttp = new XMLHttpRequest();
+
 // Tracking variables
 let vehicle: VehicleParameters = {
     rpm: 0,
@@ -58,6 +61,7 @@ function connectWebSocket(this: any) {
             (<HTMLInputElement>document.getElementById("high")).value = statusMsg.highBeam;
             (<HTMLInputElement>document.getElementById("left")).value = statusMsg.left;
             (<HTMLInputElement>document.getElementById("right")).value = statusMsg.right;
+            (<HTMLInputElement>document.getElementById("pulseCounter")).value = statusMsg.totalPulses;
         });
 
         stompClient.subscribe('/topic/logs', (message: LogMessage) => {
@@ -65,7 +69,7 @@ function connectWebSocket(this: any) {
 
             if (logMessages.length !== 0) {
                 let logArea: HTMLTextAreaElement = document.getElementById("logs") as HTMLTextAreaElement;
-                logArea.value += logArea.textContent;
+                //logArea.value += logArea.textContent;
             }
         });
     }, () => {
@@ -74,6 +78,17 @@ function connectWebSocket(this: any) {
             this.connectWebSocket();
         }.bind(this), 2500);
     });
+}
+
+export function zeroPulseCounter() {
+    xhttp.open("GET", "/interaction/zeroPulseCounter", true);
+    xhttp.send();
+}
+
+export function saveVssPpm() {
+    let pulseCounter = (<HTMLInputElement>document.getElementById("pulseCounter")).value
+    xhttp.open("GET", "/interaction/saveVssPpm?ppm=" + pulseCounter, true);
+    xhttp.send();
 }
 
 // Start polling for status

@@ -6,11 +6,11 @@
 #include "readers.h"
 #include "pins.h"
 #include "types.h"
-#include "odometer.h"
+#include "eepromHelper.h"
 #include "serialReader.h"
 
 #define LO_FREQ   15000000  // 15000000
-#define MD_FREQ   250000    // 250000
+#define MD_FREQ   25000000    // 250000
 #define HI_FREQ   100000    // 100000
 #define NO_PULSE  99999
 
@@ -52,8 +52,8 @@ void setup() {
   leftIndicator.begin(SMOOTHED_AVERAGE, 10);
   fuelLevel.begin(SMOOTHED_AVERAGE, 10);
 
-  pinMode(digitalPinToInterrupt(VSS), INPUT_PULLDOWN);
-  attachInterrupt(digitalPinToInterrupt(VSS), vssInterrupt, RISING);
+  pinMode(VSS, INPUT_PULLUP);
+  attachInterrupt(VSS, vssInterrupt, RISING);
 
   ptSensor.init();
 }
@@ -80,6 +80,10 @@ void loop() {
     if (strcmp(serialMessage, "so") == 0)
       sendOdometerValues();
 
+    // Pi requesting pulses per mile
+    else if (strcmp(serialMessage, "sppm") == 0)
+      sendPPM();
+
     // Pi writing odometer values
     else if(strstr(serialMessage, "wo:") != NULL) {
       char *values = serialMessage + 3;
@@ -89,6 +93,12 @@ void loop() {
 
       token = strtok(NULL, ",");
       writeMileage(REGULAR, atof(token));
+    }
+
+     // Pi writing pulses per mile
+    else if(strstr(serialMessage, "wppm:") != NULL) {
+      char *value = serialMessage + 5;
+      writePPM(atoi(value));
     }
   }
 
@@ -104,6 +114,7 @@ void loop() {
     unsigned int pulseSep = pulseSeparation;
     sei();
     pulseCounter = 0;
+    pulseSeparation = NO_PULSE;
 
     // Send numPulses & pulseSep
     char output[25] = {0};
@@ -146,7 +157,7 @@ void loop() {
   }
 
   // Only write odometers to EEPROM if battery voltage is good to prevent potential corruption
-  if (battery.get() > 1.0) {
+  if (analogRead(IGNI) < 100) {
     writeMileage(REGULAR, odometer);
     writeMileage(TRIP, tripOdometer); 
   }

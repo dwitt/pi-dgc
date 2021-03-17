@@ -29,7 +29,7 @@ import { startSimulation } from "./simulation";
 
 
 // Constant definitions
-export const SIMULATION = true;
+export const SIMULATION = false;
 export const MAX_RPM = 8000.0;
 export const MAX_MPH = 160.0;
 export const MAX_BOOST = 30.0;

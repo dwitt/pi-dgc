@@ -68,7 +68,9 @@ object Serial : Runnable {
                 comPort?.baudRate = 115200
                 comPort?.addDataListener(MessageListener())
 
+                // Request odometer values & VSS PPM
                 sendToSerial("so")
+                sendToSerial("sppm")
             }
 
             Thread.sleep(2000)
@@ -86,11 +88,23 @@ object Serial : Runnable {
             "lo" -> State.lowBeam = parts[1].toBoolean()
             "log" -> State.addLogMessage(parts[1])
             "odo" -> setOdometerState(parts[1])
+            "ppm" -> setVssPpm(parts[1].toInt())
             "pulses" -> handlePulses(parts[1])
             "rev" -> State.reverse = parts[1].toBoolean()
             "right" -> State.right = parts[1].toBoolean()
             "temp" -> State.temperature = parts[1].toDouble() + Config.tempCompensation
         }
+    }
+
+    private fun setVssPpm(ppm: Int) {
+        if (ppm == -1) {
+            logger.error("Could not read PPM from EEPROM. Defaulting to 8000.")
+            State.vssPulsesPerMile = 8000
+            return
+        }
+
+        logger.info("Initializing vssPulsesPerMile to $ppm")
+        State.vssPulsesPerMile = ppm
     }
 
     private fun setOdometerState(values: String) {
@@ -105,7 +119,7 @@ object Serial : Runnable {
         State.odometer = parts[1].toDouble()
         State.lastSavedOdometer = parts[1].toDouble()
 
-        logger.info("Initializing trip odo to " + State.tripOdometer + " and odo to " + State.odometer)
+        logger.info("Initializing trip odo to ${State.tripOdometer} and odo to ${State.odometer}")
     }
 
     private fun sendToSerial(message: String) {
@@ -131,6 +145,10 @@ object Serial : Runnable {
         State.lastSavedTripOdometer = tripOdometer
     }
 
+    fun writePpm(ppm: Int) {
+        sendToSerial("wppm:$ppm")
+    }
+
     private fun handlePulses(value: String) {
         val parts = value.split(",")
 
@@ -138,8 +156,10 @@ object Serial : Runnable {
         val numPulses = parts[0].toLong()
         val pulseSeparationMicros = parts[1].toLong()
 
+        State.totalPulses += numPulses
+
         // Pulses counted / pulses per mile = distance travelled.
-        val distance = numPulses / Config.vssPulsesPerMile.toDouble()
+        val distance = numPulses / State.vssPulsesPerMile.toDouble()
 
         State.odometer += distance
         State.tripOdometer += distance
@@ -148,9 +168,11 @@ object Serial : Runnable {
 
         if (pulseSeparationMicros != NO_PULSE && pulseSeparationMicros > 0L) {
             // Calculate MPH
-            val oneMphInMicros = 3_600_000_000.0 / Config.vssPulsesPerMile.toDouble()
+            val oneMphInMicros = 3_600_000_000.0 / State.vssPulsesPerMile.toDouble()
             val mph = oneMphInMicros / pulseSeparationMicros.toDouble()
             State.mph.add(mph)
+        } else {
+            State.mph.add(0.0)
         }
     }
 }

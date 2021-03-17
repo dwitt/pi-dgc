@@ -1,5 +1,4 @@
 #define IGNI    A0  // Ignition & battery voltage
-#define VSS     A1  // Vehicle Speed Sensor
 #define HIBM    A2  // High beam headlights
 #define REV     A3  // Reverse gear
 #define SDA_PIN A4  // SDA for I2C
@@ -9,6 +8,7 @@
 #define LOBM    A8  // Low beam headlights
 // A9 not yet used
 #define FUEL    A10 // Fuel sender
+#define VSS     15  // Vehicle Speed Sensor
 // A11 not yet used
 // A12 not yet used
 // A13 not yet used

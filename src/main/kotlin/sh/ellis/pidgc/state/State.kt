@@ -11,6 +11,9 @@ object State {
     var battery: Double = 0.0
 
     @set:Synchronized @get:Synchronized
+    var barometricPressure: Double = 0.0
+
+    @set:Synchronized @get:Synchronized
     var boost: Double = 0.0
 
     @set:Synchronized @get:Synchronized
@@ -43,7 +46,7 @@ object State {
     var odometer: Double = 0.0
 
     @set:Synchronized @get:Synchronized
-    var barometricPressure: Double = 0.0
+    var vssPulsesPerMile: Int = 0
 
     @set:Synchronized @get:Synchronized
     var reverse: Boolean = false
@@ -59,6 +62,9 @@ object State {
 
     @set:Synchronized @get:Synchronized
     var lastSavedTripOdometer: Double = 0.0
+
+    @set:Synchronized @get:Synchronized
+    var totalPulses: Long = 0L
 
     @set:Synchronized @get:Synchronized
     var tripOdometer: Double = 0.0

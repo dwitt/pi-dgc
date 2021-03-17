@@ -9,11 +9,9 @@ object Config {
     var batteryMin: Double = 12.0
     var batteryMax: Double = 15.0
     var speedodometerSmoothing: Int = 10
-    var vssPulsesPerMile: Int = 8000
     var tempCompensation = -5.0
 
     init {
-        vssPulsesPerMile = ini.get("vss", "pulses_per_mile", Int::class.javaPrimitiveType)
         batteryMin = ini.get("battery", "min_voltage", Double::class.javaPrimitiveType)
         batteryMax = ini.get("battery", "max_voltage", Double::class.javaPrimitiveType)
         speedodometerSmoothing = ini.get("speedometer", "smoothing", Int::class.javaPrimitiveType)

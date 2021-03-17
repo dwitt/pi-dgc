@@ -21,6 +21,7 @@ module.exports = {
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, 'src/main/resources/static/lib'),
+        library: 'pidgc'
     },
     mode: "development"
 };
