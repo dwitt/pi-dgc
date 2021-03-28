@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'bladitwo4fitalic';
+    src: url('bladitwo4fitalic-webfont.woff2') format('woff2'),
+         url('bladitwo4fitalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'bladitwo4f';
+    src: url('bladitwo4f-webfont.woff2') format('woff2'),
+         url('bladitwo4f-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}

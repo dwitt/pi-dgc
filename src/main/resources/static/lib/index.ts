@@ -26,10 +26,11 @@ import SockJS from "sockjs-client";
 import { Stomp } from '@stomp/stompjs';
 import { animate, linear } from "popmotion"
 import { startSimulation } from "./simulation";
+import '../fonts/stylesheet.css';
 
 
 // Constant definitions
-export const SIMULATION = false;
+export const SIMULATION = true;
 export const MAX_RPM = 8000.0;
 export const MAX_MPH = 160.0;
 export const MAX_BOOST = 30.0;
@@ -103,16 +104,16 @@ function setup() {
     document.body.appendChild(app.view);
 
     // Bind webcam to videoElement
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({video: {width: 800, height: 600}})
-            .then(function (stream) {
-                // @ts-ignore
-                video.srcObject = stream;
-            })
-            .catch(function () {
-                console.log("Something went wrong binding the camera!");
-            });
-    }
+    // if (navigator.mediaDevices.getUserMedia) {
+    //     navigator.mediaDevices.getUserMedia({video: {width: 800, height: 600}})
+    //         .then(function (stream) {
+    //             // @ts-ignore
+    //             video.srcObject = stream;
+    //         })
+    //         .catch(function () {
+    //             console.log("Something went wrong binding the camera!");
+    //         });
+    // }
 
     // Turn on all indicators for startup sequence
     setAllIndicators(indicators, true);
@@ -129,12 +130,12 @@ function setup() {
         app.stage.addChild(sprites.centerLines);
 
         // @ts-ignore
-        sprites.backupCamera = new PIXI.Sprite(PIXI.Texture.from(video));
-        sprites.backupCamera.anchor.set(0.5, 0.5);
-        sprites.backupCamera.height = 323.5;
-        sprites.backupCamera.position.set(640, 231);
-        sprites.backupCamera.visible = false;
-        app.stage.addChild(sprites.backupCamera);
+        // sprites.backupCamera = new PIXI.Sprite(PIXI.Texture.from(video));
+        // sprites.backupCamera.anchor.set(0.5, 0.5);
+        // sprites.backupCamera.height = 323.5;
+        // sprites.backupCamera.position.set(640, 231);
+        // sprites.backupCamera.visible = false;
+        // app.stage.addChild(sprites.backupCamera);
 
         sprites.leftGaugeBg = new PIXI.Sprite(sheet.textures['left_gauge_bg.png']);
         sprites.leftGaugeBg.anchor.set(0.5, 0.5);
@@ -299,10 +300,10 @@ function setup() {
 
         // Main gauge font
         PIXI.BitmapFont.from("LargeGauge", {
-            fontFamily: "Arial",
+            fontFamily: "bladitwo4fitalic",
+            fontStyle: "italic",
             align: "center",
             fontSize: 40,
-            strokeThickness: 2,
             fill: "white"
         });
 
@@ -317,12 +318,12 @@ function setup() {
 
         texts.rpm = new PIXI.BitmapText(Math.trunc(vehicle.rpm).toString(), {fontName: "LargeGauge"});
         texts.rpm.anchor.set(0.5, 0.5);
-        texts.rpm.position.set(247, 240);
+        texts.rpm.position.set(247, 235);
         app.stage.addChild(texts.rpm);
 
         texts.mph = new PIXI.BitmapText(Math.trunc(vehicle.mph).toString(), {fontName: "LargeGauge"});
         texts.mph.anchor.set(0.5, 0.5);
-        texts.mph.position.set(1029, 240);
+        texts.mph.position.set(1029, 235);
         app.stage.addChild(texts.mph);
 
         texts.boostLeft = new PIXI.BitmapText(Math.trunc(vehicle.boost).toString() + "psi", {fontName: "SmallGauge"});
@@ -519,10 +520,10 @@ function drawChangingElements() {
 
     if (vehicle.reverse) {
         sprites.centerLogo.visible = false;
-        sprites.backupCamera.visible = true;
+        // sprites.backupCamera.visible = true;
     } else {
         sprites.centerLogo.visible = true;
-        sprites.backupCamera.visible = false;
+        // sprites.backupCamera.visible = false;
     }
 
     if (vehicle.boost > vehicle.boostLaggingMax && initState >= 80) {

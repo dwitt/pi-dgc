@@ -11467,7 +11467,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <attribute name="VALUE" x="54.483" y="-85.598" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="FUELSENSOR" gate="G$1" x="55.88" y="71.12" smashed="yes" rot="R180">
-<attribute name="NAME" x="73.025" y="72.0598" size="1.778" layer="95" rot="R180"/>
+<attribute name="NAME" x="73.787" y="73.3298" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="57.023" y="74.422" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="GROUND" gate="G$1" x="93.98" y="81.28" smashed="yes" rot="R90">
@@ -11608,7 +11608,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="127" y1="76.2" x2="137.16" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$6" class="0">
+<net name="LOWBEAM_IN" class="0">
 <segment>
 <wire x1="38.1" y1="-22.86" x2="25.4" y2="-22.86" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="-22.86" x2="7.62" y2="-22.86" width="0.1524" layer="91"/>
@@ -11620,9 +11620,10 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="2.54" y1="50.8" x2="10.16" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="R1" gate="B" pin="13"/>
 <pinref part="R3" gate="B" pin="4"/>
+<label x="25.4" y="-12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$7" class="0">
+<net name="REVERSE_IN" class="0">
 <segment>
 <wire x1="7.62" y1="-25.4" x2="22.86" y2="-25.4" width="0.1524" layer="91"/>
 <wire x1="22.86" y1="-25.4" x2="38.1" y2="-25.4" width="0.1524" layer="91"/>
@@ -11634,9 +11635,10 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="0" y1="53.34" x2="10.16" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="R1" gate="B" pin="12"/>
 <pinref part="R3" gate="B" pin="5"/>
+<label x="22.86" y="-12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$8" class="0">
+<net name="RIGHTSIG_IN" class="0">
 <segment>
 <wire x1="38.1" y1="-27.94" x2="20.32" y2="-27.94" width="0.1524" layer="91"/>
 <wire x1="20.32" y1="-27.94" x2="7.62" y2="-27.94" width="0.1524" layer="91"/>
@@ -11648,9 +11650,10 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="-2.54" y1="55.88" x2="10.16" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="R1" gate="B" pin="11"/>
 <pinref part="R3" gate="B" pin="6"/>
+<label x="20.32" y="-12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$9" class="0">
+<net name="LEFTSIG_IN" class="0">
 <segment>
 <wire x1="7.62" y1="-30.48" x2="17.78" y2="-30.48" width="0.1524" layer="91"/>
 <wire x1="17.78" y1="-30.48" x2="38.1" y2="-30.48" width="0.1524" layer="91"/>
@@ -11662,9 +11665,10 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="-5.08" y1="58.42" x2="10.16" y2="58.42" width="0.1524" layer="91"/>
 <pinref part="R1" gate="B" pin="10"/>
 <pinref part="R3" gate="B" pin="7"/>
+<label x="17.78" y="-12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$10" class="0">
+<net name="ANALOG1_IN" class="0">
 <segment>
 <wire x1="38.1" y1="-33.02" x2="35.56" y2="-33.02" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="-33.02" x2="7.62" y2="-33.02" width="0.1524" layer="91"/>
@@ -11676,6 +11680,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="58.42" y1="50.8" x2="50.8" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="R1" gate="B" pin="9"/>
 <pinref part="R3" gate="B" pin="8"/>
+<label x="35.56" y="-12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
 <net name="N$11" class="0">
@@ -11902,7 +11907,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="53.34" y1="71.12" x2="50.8" y2="71.12" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$35" class="0">
+<net name="IGNITION_IN" class="0">
 <segment>
 <wire x1="7.62" y1="-15.24" x2="33.02" y2="-15.24" width="0.1524" layer="91"/>
 <wire x1="33.02" y1="-15.24" x2="38.1" y2="-15.24" width="0.1524" layer="91"/>
@@ -11914,9 +11919,10 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="55.88" y1="48.26" x2="50.8" y2="48.26" width="0.1524" layer="91"/>
 <pinref part="R1" gate="B" pin="16"/>
 <pinref part="R3" gate="B" pin="1"/>
+<label x="33.02" y="-12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$3" class="0">
+<net name="HIGHBEAM_IN" class="0">
 <segment>
 <wire x1="7.62" y1="-20.32" x2="27.94" y2="-20.32" width="0.1524" layer="91"/>
 <wire x1="27.94" y1="-20.32" x2="38.1" y2="-20.32" width="0.1524" layer="91"/>
@@ -11928,9 +11934,10 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="5.08" y1="48.26" x2="10.16" y2="48.26" width="0.1524" layer="91"/>
 <pinref part="R1" gate="B" pin="14"/>
 <pinref part="R3" gate="B" pin="3"/>
+<label x="27.94" y="-12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$36" class="0">
+<net name="VSS_IN" class="0">
 <segment>
 <wire x1="38.1" y1="-17.78" x2="30.48" y2="-17.78" width="0.1524" layer="91"/>
 <wire x1="30.48" y1="-17.78" x2="7.62" y2="-17.78" width="0.1524" layer="91"/>
@@ -11942,9 +11949,10 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="7.62" y1="45.72" x2="10.16" y2="45.72" width="0.1524" layer="91"/>
 <pinref part="R1" gate="B" pin="15"/>
 <pinref part="R3" gate="B" pin="2"/>
+<label x="30.48" y="-12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$2" class="0">
+<net name="IGNITION" class="0">
 <segment>
 <pinref part="IC1" gate="A1" pin="VI"/>
 <pinref part="C1" gate="G$1" pin="+"/>
@@ -11957,6 +11965,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="101.6" y1="-15.24" x2="48.26" y2="-15.24" width="0.1524" layer="91"/>
 <junction x="101.6" y="93.98"/>
 <pinref part="R3" gate="B" pin="16"/>
+<label x="54.356" y="-14.732" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="SCL" class="0">

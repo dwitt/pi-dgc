@@ -13,6 +13,17 @@ module.exports = {
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
+            {
+                test: /\.(woff|woff2)$/,
+                use: 'url-loader',
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                ],
+            },
         ],
     },
     resolve: {

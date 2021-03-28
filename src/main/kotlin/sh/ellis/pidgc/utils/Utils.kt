@@ -12,7 +12,7 @@ fun isWindows(): Boolean {
 // This has got to be the most inefficient way of doing this :)
 fun Double.equalsToTenths(other: Double): Boolean {
     val thisStr = String.format("%.1f", this)
-    val otherStr = String.format("%.1f", this)
+    val otherStr = String.format("%.1f", other)
 
     return thisStr == otherStr
 }

@@ -9,9 +9,9 @@
 #include "eepromHelper.h"
 #include "serialReader.h"
 
-#define LO_FREQ   15000000  // 15000000
-#define MD_FREQ   25000000    // 250000
-#define HI_FREQ   100000    // 100000
+#define LO_FREQ   150000000  // 15000000
+#define MD_FREQ   250000000    // 250000
+#define HI_FREQ   100000000    // 100000
 #define NO_PULSE  99999
 
 elapsedMicros lowFrequency;
@@ -54,6 +54,12 @@ void setup() {
 
   pinMode(VSS, INPUT_PULLUP);
   attachInterrupt(VSS, vssInterrupt, RISING);
+
+  pinMode(HIBM, INPUT);
+  pinMode(LOBM, INPUT);
+  pinMode(RIGHT, INPUT);
+  pinMode(LEFT, INPUT);
+  pinMode(REV, INPUT);
 
   ptSensor.init();
 }
@@ -157,7 +163,7 @@ void loop() {
   }
 
   // Only write odometers to EEPROM if battery voltage is good to prevent potential corruption
-  if (analogRead(IGNI) < 100) {
+  if (analogRead(IGNI) > 500) {
     writeMileage(REGULAR, odometer);
     writeMileage(TRIP, tripOdometer); 
   }
